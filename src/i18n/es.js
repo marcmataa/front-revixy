@@ -26,8 +26,8 @@ export default {
     lastUpdated: "Última actualización",
     kpis: {
       roas: "ROAS",
-      profit: "Contribution Profit",
-      adSpend: "Ad Spend",
+      profit: "Beneficio de contribución",
+      adSpend: "Despesa publicitária",
       confidence: "Confianza",
     },
   },
