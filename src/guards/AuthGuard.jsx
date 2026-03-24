@@ -14,7 +14,7 @@ const AuthGuard = ({ children }) => {
 
   useEffect(() => {
     if (token && !user) {
-      // Validamos el token en servidor y cargamos la tienda despu�s de auth.
+      // Validamos el token en servidor y cargamos la tienda después de auth.
       const runHydration = async () => {
         const result = await dispatch(checkAuth());
         if (result.meta.requestStatus === "fulfilled" && !currentStore) {

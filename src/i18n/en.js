@@ -17,6 +17,7 @@ export default {
     registerLink: "Sign up",
     hasAccount: "Already have an account?",
     loginLink: "Sign in",
+    logout: "Sign out",
   },
   dashboard: {
     title: "Dashboard",
@@ -146,16 +147,23 @@ export default {
     loading: "Loading...",
     error: "Something went wrong. Please try again.",
     success: "Operation completed successfully.",
+    appName: "REVIXY",
     save: "Save",
     cancel: "Cancel",
     confirm: "Confirm",
     back: "Back",
+    expand: "Expand",
+    collapse: "Collapse",
     retry: "Retry",
     reload: "Reload app",
     contactSupport: "contact support",
     noData: "No data available",
+    errorTitle: "Something went wrong",
+    errorDescription:
+      "An unexpected error occurred in this section. The rest of the app is still working.",
     errorBoundaryTitle: "Something went wrong",
     errorBoundaryDescription:
       "An unexpected error occurred in this section. The rest of the app is still working.",
+      viewProfile: "View profile and subscription",
   },
 };

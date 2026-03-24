@@ -31,7 +31,7 @@ const Login = () => {
   });
 
   const onSubmit = async (data) => {
-    // A�adimos retraso tras m�ltiples intentos fallidos para frenar abuso de UI.
+    // Añadimos retraso tras múltiples intentos fallidos para frenar abuso de UI.
     if (failCount >= 3) {
       await new Promise((r) => setTimeout(r, 1000));
     }

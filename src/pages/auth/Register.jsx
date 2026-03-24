@@ -31,7 +31,7 @@ const Register = () => {
   });
 
   const onSubmit = async (data) => {
-    // confirmPassword es solo para validaci�n local y no debe salir al API.
+    // confirmPassword es solo para validación local y no debe salir al API.
     const { confirmPassword, ...safeData } = data;
 
     const result = await dispatch(registerUser(safeData));

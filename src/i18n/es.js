@@ -17,6 +17,7 @@ export default {
     registerLink: "Regístrate",
     hasAccount: "¿Ya tienes cuenta?",
     loginLink: "Inicia sesión",
+    logout: "Cerrar sesión",
   },
   dashboard: {
     title: "Panel de control",
@@ -146,16 +147,23 @@ export default {
     loading: "Cargando...",
     error: "Ha ocurrido un error. Inténtalo de nuevo.",
     success: "Operación completada correctamente.",
+    appName: "REVIXY",
     save: "Guardar",
     cancel: "Cancelar",
     confirm: "Confirmar",
     back: "Volver",
+    expand: "Expandir",
+    collapse: "Colapsar",
     retry: "Reintentar",
     reload: "Recargar aplicación",
     contactSupport: "contacta con soporte",
     noData: "Sin datos disponibles",
+    errorTitle: "Algo ha fallado",
+    errorDescription:
+      "Ha ocurrido un error inesperado en esta sección. El resto de la aplicación sigue funcionando.",
     errorBoundaryTitle: "Algo ha fallado",
     errorBoundaryDescription:
       "Ha ocurrido un error inesperado en esta sección. El resto de la aplicación sigue funcionando.",
+      viewProfile: "Ver perfil y suscripción",
   },
 };

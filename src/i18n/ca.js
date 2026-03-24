@@ -17,6 +17,7 @@ export default {
     registerLink: "Registra't",
     hasAccount: "Ja tens compte?",
     loginLink: "Inicia sessió",
+    logout: "Tancar sessió",
   },
   dashboard: {
     title: "Tauler de control",
@@ -147,16 +148,23 @@ export default {
     loading: "Carregant...",
     error: "Ha passat un error. Torna-ho a provar.",
     success: "Operació completada correctament.",
+    appName: "REVIXY",
     save: "Desar",
     cancel: "Cancel·lar",
     confirm: "Confirmar",
     back: "Enrere",
+    expand: "Expandir",
+    collapse: "Col·lapsar",
     retry: "Reintentar",
     reload: "Recarregar l'aplicació",
     contactSupport: "contacta amb suport",
     noData: "No hi ha dades disponibles",
+    errorTitle: "Alguna cosa ha fallat",
+    errorDescription:
+      "S'ha produït un error inesperat en aquesta secció. La resta de l'aplicació continua funcionant.",
     errorBoundaryTitle: "Alguna cosa ha fallat",
     errorBoundaryDescription:
       "S'ha produït un error inesperat en aquesta secció. La resta de l'aplicació continua funcionant.",
+      viewProfile:"Veure perfil i suscripció",
   },
 };
