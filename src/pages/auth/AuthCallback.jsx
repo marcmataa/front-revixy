@@ -37,7 +37,7 @@ const AuthCallback = () => {
     };
 
     exchangeToken();
-  }, [dispatch, navigate, t]);
+  }, []);
 
   return <Spinner fullScreen />;
 };
