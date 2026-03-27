@@ -144,6 +144,145 @@ export default {
     roasMax: "Un ROAS de més de 50x no és realista.",
     selectValid: "Selecciona una opció vàlida.",
   },
+  landing: {
+    nav: {
+      login: "Inicia sessió",
+      cta: "Comença gratuïtament",
+    },
+    hero: {
+      eyebrow: "✨ NOVA ERA: INTEL·LIGÈNCIA ARTIFICIAL PER A ECOMMERCE",
+      headline: "Domina el teu marge.",
+      headlineAccent: "Sense sorpreses.",
+      sub: "Connecta Shopify i Meta Ads. REVIXY calcula el teu benefici real, detecta pèrdues abans que passin i et suggereix què fer.",
+      cta: "Comença gratis",
+      ctaSub: "Sense targeta de crèdit · Llest en 5 minuts",
+      socialProof: "Optimitzat per més de 150 botigues aquest mes",
+      dashValue: "Benefici real",
+      dashRoas: "ROAS real",
+      dashSpend: "Inversió ads",
+      dashHealth: "HealthScore",
+      floatingRoas: "ROAS 4.2x",
+      floatingBadRoas: "ROAS 0.8x",
+      floatingProfit: "Profit avui: +1.240€",
+      dashGraphTitle: "Rendiment de Vendes vs ROAS",
+    },
+    problem: {
+      heading: "Coneixes el teu benefici real d'avui?",
+      sub: "La majoria de fundadors DTC treballen amb números que no són reals. I ho saben. Però no tenen temps per calcular-los bé cada dia.",
+      roas: {
+        title: "ROAS Mentider",
+        desc: "La teva plataforma de publicitat diu 4x. El teu compte bancari diu una altra cosa. Quin creus? El ROAS que veus no descompta COGS, ports ni devolucions.",
+      },
+      spreadsheet: {
+        title: "El Full de Càlcul Trencat",
+        desc: "Cada setmana, hores calculant manualment el que hauria de ser automàtic. Un error en una cel·la esborra setmanes de feina.",
+      },
+      invisible: {
+        title: "La Pèrdua Invisible",
+        desc: "Les comissions de passarel·la, els ports, les devolucions. Tot resta. Quant exactament? Quan ho calcules, ja has perdut els diners.",
+      },
+    },
+    solution: {
+      heading: "Tres passos. Benefici real. Sense fulls de càlcul.",
+      sub: "Sense agències de dades, sense integracions complexes, sense setmanes de configuració.",
+      connect: {
+        title: "Connecta",
+        desc: "Vincula el teu Shopify i Meta Ads en menys de 2 minuts. OAuth segur, sense credencials manuals ni accés a les teves dades de pagament.",
+      },
+      analyze: {
+        title: "Analitza",
+        desc: "REVIXY calcula el teu Contribution Profit real cada dia: ingressos nets menys publicitat, COGS, comissions de passarel·la i ports.",
+      },
+      act: {
+        title: "Actua",
+        desc: "Rep alertes quan alguna cosa va malament i simula l'impacte de les teves decisions abans d'executar-les. Escenaris optimista i pessimista inclosos.",
+      },
+    },
+    features: {
+      heading: "El teu copilot financer. Sempre actiu.",
+      sub: "No és un altre panell de mètriques. És una capa d'intel·ligència que converteix les teves dades en decisions.",
+      healthScore: {
+        title: "HealthScore en temps real",
+        desc: "Un únic número de 0 a 100 que resumeix la salut financera del teu negoci. Verd, taronja o vermell — saps a l'instant si cal actuar.",
+      },
+      alerts: {
+        title: "Alertes intel·ligents",
+        desc: "REVIXY detecta anomalies automàticament: ROAS per sota del break-even, pèrdues acumulades, fatiga de creatius. Abans que costin diners.",
+      },
+      simulator: {
+        title: "Simulador de decisions",
+        desc: "Pausar una campanya? Escalar el pressupost? Simula l'impacte financer abans de fer-ho. Escenari optimista i pessimista inclosos.",
+      },
+      chat: {
+        title: "Xat IA financer",
+        desc: "Pregunta el que vulguis. '¿Haig d'escalar avui?' 'Quin és el meu ROAS real aquesta setmana?' Respostes en segons, amb les teves dades reals.",
+      },
+      autopilot: {
+        badge: "AUTOPILOT",
+        title: "Mode Autopilot",
+        desc: "REVIXY pot pausar les teves campanyes de Meta automàticament quan el teu Contribution Profit real cau per sota del teu llindar de rendibilitat. No basat en el ROAS que et mostra la plataforma — basat en el teu benefici real després de descomptar publicitat, producte, comissions de passarel·la i ports.",
+        descStrong: "La diferència pot ser de milers d'euros al mes.",
+      },
+    },
+    metrics: {
+      setup: { value: "< 5 min", label: "Temps mitjà de configuració" },
+      history: {
+        value: "14 dies",
+        label: "D'històric analitzat en cada sessió",
+      },
+      response: {
+        value: "60 s",
+        label: "Temps màxim de resposta del Copilot IA",
+      },
+      languages: { value: "3 idiomes", label: "Espanyol, Anglès i Català" },
+    },
+    pricing: {
+      heading: "Comença gratuïtament. Sense compromisos.",
+      sub: "Quan estiguis llest per escalar, el pla Pro t'estarà esperant.",
+      free: {
+        plan: "FREE",
+        price: "0€",
+        period: "Gratuït per sempre",
+        cta: "Comença gratuïtament",
+        features: [
+          "Tauler de benefici real",
+          "Integració Shopify + Meta Ads",
+          "HealthScore diari",
+          "14 dies d'històric",
+          "3 alertes actives simultànies",
+        ],
+      },
+      pro: {
+        plan: "PRO",
+        badge: "Accés Anticipat",
+        price: "Properament",
+        period: "Preus d'Accés Anticipat per als primers usuaris",
+        cta: "Unir-me a l'Accés Anticipat",
+        features: [
+          "Tot el de Free",
+          "Alertes il·limitades",
+          "Xat IA financer",
+          "Simulador de decisions",
+          "Mode Autopilot",
+          "Històric il·limitat",
+        ],
+      },
+    },
+    finalCta: {
+      heading: "La teva competència ja sap quant guanya.",
+      headingAccent: "I tu?",
+      sub: "Connecta la teva botiga avui. En 5 minuts sabràs si estàs guanyant o perdent diners de veritat.",
+      cta: "Comença gratuïtament ara",
+      ctaSub:
+        "Sense targeta de crèdit · Sense contractes · Cancel·la quan vulguis",
+    },
+    footer: {
+      privacy: "Privacitat",
+      terms: "Termes",
+      contact: "Contacte",
+      copyright: "© 2025 REVIXY. Tots els drets reservats.",
+    },
+  },
   common: {
     loading: "Carregant...",
     error: "Ha passat un error. Torna-ho a provar.",
@@ -165,6 +304,6 @@ export default {
     errorBoundaryTitle: "Alguna cosa ha fallat",
     errorBoundaryDescription:
       "S'ha produït un error inesperat en aquesta secció. La resta de l'aplicació continua funcionant.",
-      viewProfile:"Veure perfil i suscripció",
+    viewProfile: "Veure perfil i suscripció",
   },
 };

@@ -143,6 +143,141 @@ export default {
     roasMax: "A ROAS above 50x is not realistic.",
     selectValid: "Please select a valid option.",
   },
+  landing: {
+    nav: {
+      login: "Sign in",
+      cta: "Start for free",
+    },
+    hero: {
+      eyebrow: "✨ NEW ERA: AI FOR ECOMMERCE",
+      headline: "Master your margin.",
+      headlineAccent: "No surprises.",
+      sub: "Connect Shopify and Meta Ads. REVIXY calculates your real profit, detects losses before they happen, and suggests your next move.",
+      cta: "Start for free",
+      ctaSub: "No credit card required · Ready in 5 minutes",
+      socialProof: "Optimized by over 150 stores this month",
+      dashValue: "Real Profit",
+      dashRoas: "Real ROAS",
+      dashSpend: "Ad Spend",
+      dashHealth: "HealthScore",
+      floatingRoas: "ROAS 4.2x",
+      floatingBadRoas: "ROAS 0.8x",
+      floatingProfit: "Today's Profit: +€1,240",
+      dashGraphTitle: "Sales Performance vs ROAS",
+    },
+    problem: {
+      heading: "Do you know your real profit today?",
+      sub: "Most DTC founders work with numbers that aren't real. And they know it. But they don't have time to calculate them properly every day.",
+      roas: {
+        title: "Lying ROAS",
+        desc: "Your ad platform says 4x. Your bank account says otherwise. Which to believe? The ROAS you see doesn't deduct COGS, shipping, or returns.",
+      },
+      spreadsheet: {
+        title: "The Broken Spreadsheet",
+        desc: "Every week, hours manually calculating what should be automatic. One cell error erases weeks of work.",
+      },
+      invisible: {
+        title: "The Invisible Loss",
+        desc: "Gateway fees, shipping costs, returns. Everything subtracts. Exactly how much? By the time you calculate it, the money is already gone.",
+      },
+    },
+    solution: {
+      heading: "Three steps. Real profit. No spreadsheets.",
+      sub: "No data agencies, no complex integrations, no weeks of setup.",
+      connect: {
+        title: "Connect",
+        desc: "Link your Shopify and Meta Ads in under 2 minutes. Secure OAuth — no manual credentials or access to your payment data.",
+      },
+      analyze: {
+        title: "Analyze",
+        desc: "REVIXY calculates your real Contribution Profit every day: net revenue minus advertising, COGS, gateway fees, and shipping.",
+      },
+      act: {
+        title: "Act",
+        desc: "Get alerts when something goes wrong and simulate the impact of your decisions before executing them. Optimistic and pessimistic scenarios included.",
+      },
+    },
+    features: {
+      heading: "Your financial co-pilot. Always on.",
+      sub: "This is not another metrics dashboard. It's an intelligence layer that turns your data into decisions.",
+      healthScore: {
+        title: "Real-time HealthScore",
+        desc: "A single number from 0 to 100 that summarizes your business's financial health. Green, orange, or red — you know instantly whether to act.",
+      },
+      alerts: {
+        title: "Smart alerts",
+        desc: "REVIXY automatically detects anomalies: ROAS below break-even, accumulated losses, creative fatigue. Before they cost money.",
+      },
+      simulator: {
+        title: "Decision simulator",
+        desc: "Pause a campaign? Scale the budget? Simulate the financial impact before doing it. Optimistic and pessimistic scenarios included.",
+      },
+      chat: {
+        title: "Financial AI Chat",
+        desc: "Ask anything. 'Should I scale today?' 'What's my real ROAS this week?' Answers in seconds, with your real data.",
+      },
+      autopilot: {
+        badge: "AUTOPILOT",
+        title: "Autopilot Mode",
+        desc: "REVIXY can automatically pause your Meta campaigns when your real Contribution Profit drops below your profitability threshold. Not based on the ROAS the platform shows you — based on your real profit after deducting advertising, product, gateway fees, and shipping.",
+        descStrong: "The difference can be thousands of euros per month.",
+      },
+    },
+    metrics: {
+      setup: { value: "< 5 min", label: "Average setup time" },
+      history: { value: "14 days", label: "Of history analyzed each session" },
+      response: { value: "60 s", label: "Max AI Copilot response time" },
+      languages: {
+        value: "3 languages",
+        label: "Spanish, English and Catalan",
+      },
+    },
+    pricing: {
+      heading: "Start free. No commitment.",
+      sub: "When you're ready to scale, the Pro plan will be waiting.",
+      free: {
+        plan: "FREE",
+        price: "€0",
+        period: "Free forever",
+        cta: "Start for free",
+        features: [
+          "Real profit dashboard",
+          "Shopify + Meta Ads integration",
+          "Daily HealthScore",
+          "14 days of history",
+          "3 simultaneous active alerts",
+        ],
+      },
+      pro: {
+        plan: "PRO",
+        badge: "Early Access",
+        price: "Coming soon",
+        period: "Early Access pricing for first users",
+        cta: "Join Early Access",
+        features: [
+          "Everything in Free",
+          "Unlimited alerts",
+          "Financial AI Chat",
+          "Decision simulator",
+          "Autopilot Mode",
+          "Unlimited history",
+        ],
+      },
+    },
+    finalCta: {
+      heading: "Your competition already knows how much they earn.",
+      headingAccent: "Do you?",
+      sub: "Connect your store today. In 5 minutes you'll know if you're really making or losing money.",
+      cta: "Start for free now",
+      ctaSub: "No credit card · No contracts · Cancel anytime",
+    },
+    footer: {
+      privacy: "Privacy",
+      terms: "Terms",
+      contact: "Contact",
+      copyright: "© 2025 REVIXY. All rights reserved.",
+    },
+  },
   common: {
     loading: "Loading...",
     error: "Something went wrong. Please try again.",
@@ -164,6 +299,6 @@ export default {
     errorBoundaryTitle: "Something went wrong",
     errorBoundaryDescription:
       "An unexpected error occurred in this section. The rest of the app is still working.",
-      viewProfile: "View profile and subscription",
+    viewProfile: "View profile and subscription",
   },
 };

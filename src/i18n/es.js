@@ -143,6 +143,144 @@ export default {
     roasMax: "Un ROAS de más de 50x no es realista.",
     selectValid: "Selecciona una opción válida.",
   },
+  landing: {
+    nav: {
+      login: "Iniciar sesión",
+      cta: "Empezar gratis",
+    },
+    hero: {
+      eyebrow: "✨ NUEVA ERA: INTELIGENCIA ARTIFICIAL PARA ECOMMERCE",
+      headline: "Domina tu margen.",
+      headlineAccent: "Sin sorpresas.",
+      sub: "Conecta tu Shopify y Meta Ads. REVIXY calcula tu beneficio real, detecta pérdidas antes de que ocurran y te sugiere qué hacer.",
+      cta: "Empezar gratis",
+      ctaSub: "Sin tarjeta de crédito · Listo en 5 minutos",
+      socialProof: "Optimizado por más de 150 tiendas este mes",
+      dashValue: "Beneficio real",
+      dashRoas: "ROAS real",
+      dashSpend: "Inversión ads",
+      dashHealth: "HealthScore",
+      floatingRoas: "ROAS 4.2x",
+      floatingBadRoas: "ROAS 0.8x",
+      floatingProfit: "Profit hoy: +1.240€",
+      dashGraphTitle: "Rendimiento de Ventas vs ROAS",
+    },
+    problem: {
+      heading: "¿Conoces tu beneficio real de hoy?",
+      sub: "La mayoría de fundadores DTC trabajan con números que no son reales. Y lo saben. Pero no tienen tiempo para calcularlos bien cada día.",
+      roas: {
+        title: "ROAS Mentiroso",
+        desc: "Tu plataforma de anuncios dice 4x. Tu cuenta bancaria dice otra cosa. ¿Cuál creer? El ROAS que ves no descuenta COGS, portes ni devoluciones.",
+      },
+      spreadsheet: {
+        title: "La Hoja de Cálculo Rota",
+        desc: "Cada semana, horas calculando manualmente lo que debería ser automático. Un error en una celda borra semanas de trabajo.",
+      },
+      invisible: {
+        title: "La Pérdida Invisible",
+        desc: "Las comisiones de pasarela, los portes, las devoluciones. Todo resta. ¿Cuánto exactamente? Cuando lo calculas, ya has perdido el dinero.",
+      },
+    },
+    solution: {
+      heading: "Tres pasos. Beneficio real. Sin hojas de cálculo.",
+      sub: "Sin agencias de datos, sin integraciones complejas, sin semanas de configuración.",
+      connect: {
+        title: "Conecta",
+        desc: "Vincula tu Shopify y Meta Ads en menos de 2 minutos. OAuth seguro, sin credenciales manuales ni acceso a tus datos de pago.",
+      },
+      analyze: {
+        title: "Analiza",
+        desc: "REVIXY calcula tu Contribution Profit real cada día: ingresos netos menos publicidad, COGS, comisiones de pasarela y portes.",
+      },
+      act: {
+        title: "Actúa",
+        desc: "Recibe alertas cuando algo va mal y simula el impacto de tus decisiones antes de ejecutarlas. Escenarios optimista y pesimista incluidos.",
+      },
+    },
+    features: {
+      heading: "Tu copiloto financiero. Siempre activo.",
+      sub: "No es otro panel de métricas. Es una capa de inteligencia que convierte tus datos en decisiones.",
+      healthScore: {
+        title: "HealthScore en tiempo real",
+        desc: "Un único número de 0 a 100 que resume la salud financiera de tu negocio. Verde, naranja o rojo — sabes al instante si hay que actuar.",
+      },
+      alerts: {
+        title: "Alertas inteligentes",
+        desc: "REVIXY detecta anomalías automáticamente: ROAS bajo el break-even, pérdidas acumuladas, fatiga de creativos. Antes de que cuesten dinero.",
+      },
+      simulator: {
+        title: "Simulador de decisiones",
+        desc: "¿Pausar una campaña? ¿Escalar el presupuesto? Simula el impacto financiero antes de hacerlo. Escenario optimista y pesimista incluidos.",
+      },
+      chat: {
+        title: "Chat IA financiero",
+        desc: "Pregunta lo que quieras. '¿Debo escalar hoy?' '¿Cuál es mi ROAS real esta semana?' Respuestas en segundos, con tus datos reales.",
+      },
+      autopilot: {
+        badge: "AUTOPILOT",
+        title: "Modo Autopilot",
+        desc: "REVIXY puede pausar tus campañas de Meta automáticamente cuando tu Contribution Profit real cae bajo tu umbral de rentabilidad. No basado en el ROAS que te muestra la plataforma — basado en tu beneficio real después de descontar publicidad, producto, comisiones de pasarela y portes.",
+        descStrong: "La diferencia puede ser de miles de euros al mes.",
+      },
+    },
+    metrics: {
+      setup: { value: "< 5 min", label: "Tiempo medio de configuración" },
+      history: {
+        value: "14 días",
+        label: "De histórico analizado en cada sesión",
+      },
+      response: {
+        value: "60 s",
+        label: "Tiempo máximo de respuesta del Copilot IA",
+      },
+      languages: { value: "3 idiomas", label: "Español, Inglés y Catalán" },
+    },
+    pricing: {
+      heading: "Empieza gratis. Sin compromisos.",
+      sub: "Cuando estés listo para escalar, el plan Pro estará esperándote.",
+      free: {
+        plan: "FREE",
+        price: "0€",
+        period: "Gratis para siempre",
+        cta: "Empezar gratis",
+        features: [
+          "Dashboard de beneficio real",
+          "Integración Shopify + Meta Ads",
+          "HealthScore diario",
+          "14 días de histórico",
+          "3 alertas activas simultáneas",
+        ],
+      },
+      pro: {
+        plan: "PRO",
+        badge: "Early Access",
+        price: "Próximamente",
+        period: "Precios de Early Access para los primeros usuarios",
+        cta: "Unirme a Early Access",
+        features: [
+          "Todo lo de Free",
+          "Alertas ilimitadas",
+          "Chat IA financiero",
+          "Simulador de decisiones",
+          "Modo Autopilot",
+          "Histórico ilimitado",
+        ],
+      },
+    },
+    finalCta: {
+      heading: "Tu competencia ya sabe cuánto gana.",
+      headingAccent: "¿Y tú?",
+      sub: "Conecta tu tienda hoy. En 5 minutos sabrás si estás ganando o perdiendo dinero de verdad.",
+      cta: "Empezar gratis ahora",
+      ctaSub: "Sin tarjeta de crédito · Sin contratos · Cancela cuando quieras",
+    },
+    footer: {
+      privacy: "Privacidad",
+      terms: "Términos",
+      contact: "Contacto",
+      copyright: "© 2025 REVIXY. Todos los derechos reservados.",
+    },
+  },
   common: {
     loading: "Cargando...",
     error: "Ha ocurrido un error. Inténtalo de nuevo.",
@@ -164,6 +302,6 @@ export default {
     errorBoundaryTitle: "Algo ha fallado",
     errorBoundaryDescription:
       "Ha ocurrido un error inesperado en esta sección. El resto de la aplicación sigue funcionando.",
-      viewProfile: "Ver perfil y suscripción",
+    viewProfile: "Ver perfil y suscripción",
   },
 };
