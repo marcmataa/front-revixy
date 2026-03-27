@@ -18,6 +18,9 @@ import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import AlertsPage from "./pages/alerts/AlertsPage.jsx";
 import ChatPage from "./pages/ai/ChatPage.jsx";
 import Settings from "./pages/settings/Settings.jsx";
+import LandingPage from "./pages/landing/LandingPage.jsx";
+import PrivacyPage from "./pages/landing/PrivacyPage.jsx";
+import TermsPage from "./pages/landing/TermsPage.jsx";
 
 export default function App() {
   return (
@@ -152,8 +155,11 @@ export default function App() {
             }
           />
 
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          {/* Rutas públicas de marketing — sin guard */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
     </Provider>

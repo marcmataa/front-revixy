@@ -18,7 +18,18 @@ Every component must be production-grade, visually distinctive, and optimized fo
 - **Icons:** Lucide React
 - **Notifications:** React Hot Toast
 - **Dates:** date-fns
-- **i18n:** Custom translation layer driven by `store.language` (see Section 5)
+
+### 🌐 Strict i18n & Internationalization Protocol
+* **Zero Hardcoded Strings:** Absolute prohibition of plain text (strings) within any `.jsx` or `.tsx` component. All user-facing content—headlines, buttons, tooltips, labels, and alerts—must be consumed exclusively through the `t('key.path')` translation system.
+* **Mandatory Dictionary Workflow:** Before implementing any UI change, the agent MUST follow this exact lifecycle:
+    1.  **Identify** all required text strings for the feature.
+    2.  **Audit** the existing translation dictionaries: `src/i18n/es.js`, `src/i18n/en.js`, and `src/i18n/ca.js`.
+    3.  **Synchronize:** If a key is missing or the copy needs an update, the agent **must update all three files simultaneously** before proceeding with the component code.
+* **Semantic Key Hierarchy:** Keys must follow a strict, nested logical structure to prevent collisions and ensure maintainability.
+    * *Format:* `[page].[section].[element].[state]`
+    * *Example:* `landing.hero.headline.main` or `dashboard.sidebar.settings.tooltip`.
+* **Trilingual Consistency:** A task is only considered "Done" if it includes valid translations in **Spanish, English, and Catalan**. If a technical translation in Catalan is unknown, the agent must infer it via professional context or maintain consistency with the project's existing glossary.
+* **Dynamic Interpolation:** For dynamic data (e.g., "Welcome, [Name]"), use the i18n system's built-in interpolation. Never use string concatenation or template literals within the JSX for translated content.
 
 ---
 
