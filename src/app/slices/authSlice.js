@@ -74,9 +74,11 @@ const authSlice = createSlice({
     user: null,
     loading: false,
     error: null,
-    // isHydrating: true mientras checkAuth está en curso al montar la app
-    // AuthGuard lo usa para mostrar spinner y no redirigir prematuramente
-    isHydrating: true,
+    // isHydrating: true SOLO si hay un token en localStorage que validar.
+    // Si no hay token, no hay nada que hidratar → false inmediato.
+    // Inicializarlo siempre en true causaba spinner infinito cuando
+    // no había token (checkAuth nunca se despachaba → nunca se resolvía).
+    isHydrating: !!localStorage.getItem("accessToken"),
   },
   reducers: {
     clearError: (state) => {

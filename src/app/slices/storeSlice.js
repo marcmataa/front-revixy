@@ -61,6 +61,12 @@ const storeSlice = createSlice({
     current: null, // null = sin tienda → OnboardingGuard redirige a /onboarding/shopify
     loading: false,
     error: null,
+    // hydrated: false hasta que fetchCurrentStore complete (éxito o fallo).
+    // OnboardingGuard lo usa para saber si debe redirigir o esperar.
+    // Sin este flag, OnboardingGuard ve loading=false + current=null en el
+    // primer render (antes de que se despache fetchCurrentStore) y redirige
+    // prematuramente a /onboarding/shopify — redirect loop.
+    hydrated: false,
   },
   reducers: {
     clearStoreError: (state) => {
@@ -76,11 +82,13 @@ const storeSlice = createSlice({
       .addCase(fetchCurrentStore.fulfilled, (state, action) => {
         state.current = action.payload;
         state.loading = false;
+        state.hydrated = true; // fetch completó con éxito → OnboardingGuard puede decidir
       })
       .addCase(fetchCurrentStore.rejected, (state, action) => {
         state.current = null;
         state.loading = false;
         state.error = action.payload;
+        state.hydrated = true; // fetch completó con error → asumir sin tienda, redirigir a onboarding
       })
       .addCase(updateStoreSettings.pending, (state) => {
         state.loading = true;
@@ -117,6 +125,7 @@ export const selectCurrentStore = createSelector(
 );
 export const selectStoreLoading = (state) => state.store.loading;
 export const selectStoreError = (state) => state.store.error;
+export const selectStoreHydrated = (state) => state.store.hydrated;
 
 // Selectores derivados — extraen campos específicos de la tienda
 export const selectStoreId = createSelector(
