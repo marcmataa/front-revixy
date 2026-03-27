@@ -47,7 +47,7 @@ const Logo = ({ collapsed = false, className = "", style = {} }) => {
           marginLeft: "-7px",
         }}
       >
-        REVI<span style={{ color: "#6C63FF" }}>XY</span>
+        REVI<span style={{ color: "rgb(108, 99, 255)" }}>XY</span>
       </span>
     </div>
   );

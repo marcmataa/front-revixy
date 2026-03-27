@@ -28,3 +28,32 @@ body {
   background: var(--bg);
   color: var(--text);
 }
+
+/* 1. Bloqueo total en el contenedor raíz */
+#root, /* 1. Cursor por defecto en toda la web (limpieza visual) */
+html, body {
+  cursor: default;
+}
+
+/* 2. Bloqueo de selección SOLO en componentes visuales / métricas */
+.metric-card, 
+.lang-btn, 
+button, 
+nav, 
+footer {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* 3. Permitir selección en contenido de lectura (títulos y párrafos) */
+h1, h2, h3, p, span.description {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* 4. Cursor de mano SOLO en lo que realmente hace algo */
+a, 
+button, 
+.clickable {
+  cursor: pointer !important;
+}
