@@ -147,6 +147,7 @@ export default {
     nav: {
       login: "Sign in",
       cta: "Start for free",
+      ctaRes: "Start",
     },
     hero: {
       eyebrow: "✨ NEW ERA: AI FOR ECOMMERCE",
@@ -224,6 +225,8 @@ export default {
       },
     },
     metrics: {
+      heading: "Real results in record time",
+      sub: "Designed for founders who don't have a second to waste. Set up your account and get instant answers from our AI.",
       setup: { value: "< 5 min", label: "Average setup time" },
       history: { value: "14 days", label: "Of history analyzed each session" },
       response: { value: "60 s", label: "Max AI Copilot response time" },
@@ -275,7 +278,7 @@ export default {
       privacy: "Privacy",
       terms: "Terms",
       contact: "Contact",
-      copyright: "© 2025 REVIXY. All rights reserved.",
+      copyright: "© 2026 REVIXY. All rights reserved.",
     },
   },
   common: {

@@ -148,6 +148,7 @@ export default {
     nav: {
       login: "Inicia sessió",
       cta: "Comença gratuïtament",
+      ctaRes: "Comença",
     },
     hero: {
       eyebrow: "✨ NOVA ERA: INTEL·LIGÈNCIA ARTIFICIAL PER A ECOMMERCE",
@@ -225,6 +226,8 @@ export default {
       },
     },
     metrics: {
+      heading: "Resultats reals en temps rècord",
+      sub: "Dissenyat per a fundadors que no tenen ni un segon a perdre. Configura el teu compte i obtén respostes de la nostra IA a l'instant.",
       setup: { value: "< 5 min", label: "Temps mitjà de configuració" },
       history: {
         value: "14 dies",
@@ -280,7 +283,7 @@ export default {
       privacy: "Privacitat",
       terms: "Termes",
       contact: "Contacte",
-      copyright: "© 2025 REVIXY. Tots els drets reservats.",
+      copyright: "© 2026 REVIXY. Tots els drets reservats.",
     },
   },
   common: {

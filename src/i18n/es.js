@@ -146,7 +146,8 @@ export default {
   landing: {
     nav: {
       login: "Iniciar sesión",
-      cta: "Empezar gratis",
+      cta: "Empezar ahora",
+      ctaRes: "Empezar"
     },
     hero: {
       eyebrow: "✨ NUEVA ERA: INTELIGENCIA ARTIFICIAL PARA ECOMMERCE",
@@ -224,6 +225,8 @@ export default {
       },
     },
     metrics: {
+      heading: "Resultados reales en tiempo récord",
+      sub: "Configura tu cuenta en minutos y deja que nuestra IA analice todo tu histórico para darte respuestas precisas.",
       setup: { value: "< 5 min", label: "Tiempo medio de configuración" },
       history: {
         value: "14 días",
@@ -278,7 +281,7 @@ export default {
       privacy: "Privacidad",
       terms: "Términos",
       contact: "Contacto",
-      copyright: "© 2025 REVIXY. Todos los derechos reservados.",
+      copyright: "© 2026 REVIXY. Todos los derechos reservados.",
     },
   },
   common: {
