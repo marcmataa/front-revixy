@@ -21,11 +21,13 @@ import Settings from "./pages/settings/Settings.jsx";
 import LandingPage from "./pages/landing/LandingPage.jsx";
 import PrivacyPage from "./pages/landing/PrivacyPage.jsx";
 import TermsPage from "./pages/landing/TermsPage.jsx";
+import LandingLanguageInterceptor from "./providers/LandingLanguageInterceptor.jsx";
 
 export default function App() {
   return (
     <Provider store={store}>
       <Router>
+        <LandingLanguageInterceptor />
         <SimulationSheet />
 
         <Toaster

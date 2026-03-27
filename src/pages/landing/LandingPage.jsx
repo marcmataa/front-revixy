@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../app/slices/authSlice.js";
 import { useT } from "../../hooks/useT.js";
+
 import Logo from "../../components/ui/logo.jsx";
 import {
   TrendingDown,
@@ -16,6 +17,7 @@ import {
   Sliders,
   MessageSquare,
   Bot,
+  User,
   ChevronDown,
   X,
   Menu,
@@ -377,277 +379,106 @@ function LogoCarousel({ logos }) {
 
 // ─── HERO ─────────────────────────────────────────────────────────────────────
 export function Hero() {
-  const t = useT();
-  const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+   const t = useT();
+  useEffect(() => { setMounted(true); }, []);
 
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(raf);
-  }, []);
+  const fadeInStyle = (delay) => ({
+    opacity: mounted ? 1 : 0,
+    transform: mounted ? "translateY(0px)" : "translateY(20px)",
+    transition: `0.8s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,
+  });
+
+  const BRANDS = ["MANGO HOME", "PETFY", "NØRD STUDIO", "LUMIA WEAR", "ARKANA"];
 
   return (
-    <section
-      className="relative overflow-hidden flex flex-col"
-      style={{
-        background:
-          "linear-gradient(to bottom, rgba(20,18,35,1) 0%, rgba(14,12,28,1) 60%, rgba(12,10,24,1) 100%)",
-        minHeight: "100svh",
-      }}
-    >
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, rgba(108,99,255,0.07) 1px, transparent 1px)",
-          backgroundSize: "30px 30px",
-        }}
-      />
+    <section className="relative overflow-hidden flex flex-col" style={{ background: "rgb(18, 15, 29)", minHeight: "100svh", userSelect: "none" }}>
+      <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(108, 99, 255, 0.08) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 30% 30%, rgba(108, 99, 255, 0.18) 0%, transparent 60%)" }} />
+      <div className="absolute bottom-0 left-0 w-full h-80 pointer-events-none" style={{ background: "linear-gradient(transparent, rgb(8, 8, 12))" }} />
 
-      {/* ── Navbar ───────────────────────────────────────────────────────── */}
-      <nav
-        className="sticky top-0 z-50 flex items-center justify-between px-5 md:px-10 py-5 shrink-0 border-b"
-        style={{
-          background: "rgba(8, 8, 12, 0.75)",
-          borderColor: "rgba(255, 255, 255, 0.06)",
-          backdropFilter: "blur(28px) saturate(180%)",
-          WebkitBackdropFilter: "blur(28px) saturate(180%)",
-          boxShadow:
-            "0 1px 0 rgba(255,255,255,0.04), 0 4px 24px rgba(0,0,0,0.35), 0 0 0 1px rgba(108,99,255,0.06)",
-        }}
-      >
-        <Link to="/">
-          <Logo />
+      {/* NAV MODIFICADO PARA RESPONSIVE */}
+      <nav className="sticky top-0 z-50 flex items-center justify-between px-4 md:px-10 py-4 md:py-5 shrink-0" 
+        style={{ background: "rgba(13, 11, 22, 0.85)", backdropFilter: "blur(28px) saturate(180%)", WebkitBackdropFilter: "blur(28px) saturate(180%)", borderBottom: "1px solid transparent", borderImage: "linear-gradient(to right, transparent, rgba(108, 99, 255, 0.45), rgba(255, 255, 255, 0.1), rgba(108, 99, 255, 0.45), transparent) 1 / 1 / 0 stretch", boxShadow: "rgba(0, 0, 0, 0.8) 0px 15px 40px -12px" }}>
+        <Link to="/" className="nav-logo-link transition-all duration-300 active:scale-95">
+          <div className="nav-logo-glow flex items-center">
+            {/* Logo escalado para móvil */}
+            <div className="w-[60px] h-[45px] md:w-[80px] md:h-[60px]" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <img alt="Logo" src="/src/assets/logo.png" style={{ width: "100%", height: "100%", objectFit: "contain" }} className="scale-[1.3] md:scale-[1.6]" />
+            </div>
+            <span className="text-[18px] md:text-[25px]" style={{ fontFamily: "Syne, sans-serif", fontWeight: 800, textTransform: "uppercase", letterSpacing: "-0.04em", color: "#e8e8f0", marginLeft: "-4px", marginTop: "4px" }}>
+              REVI<span style={{ color: "rgb(108, 99, 255)" }}>XY</span>
+            </span>
+          </div>
         </Link>
-
-        <div className="hidden md:flex items-center gap-3">
-          <Link
-            to="/login"
-            className="px-4 py-2 rounded-lg text-sm font-medium border transition-colors duration-150"
-            style={{
-              color: "var(--text)",
-              borderColor: "var(--border)",
-              fontFamily: "DM Sans, sans-serif",
-            }}
-          >
-            {t.landing.nav.login}
+        <div className="flex items-center gap-2 md:gap-4">
+          {/* Iniciar sesión: Texto corto o escondido en móviles muy pequeños */}
+          <Link to="/login" className="nav-btn-secondary-pro px-3 md:px-5 py-2 rounded-lg text-xs md:text-sm font-medium transition-all" style={{ color: "rgba(255, 255, 255, 0.7)", background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.08)", fontFamily: "DM Sans, sans-serif" }}>
+            <span className="hidden xs:inline">{t.landing.nav.login}</span>
+            <span className="xs:hidden">{t.landing.nav.login}</span>
           </Link>
-          <Link
-            to="/register"
-            className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors duration-150"
-            style={{
-              background: "var(--accent)",
-              fontFamily: "DM Sans, sans-serif",
-            }}
-          >
-            {t.landing.nav.cta}
+          {/* Empezar: Texto dinámico */}
+          <Link to="/register" className="nav-btn-primary-animated px-3 md:px-5 py-2 rounded-lg text-xs md:text-sm font-medium text-white transition-all whitespace-nowrap" style={{ background: "rgb(108, 99, 255)", fontFamily: "DM Sans, sans-serif", boxShadow: "0 0 25px rgba(108, 99, 255, 0.35)" }}>
+            <span className="hidden xs:inline">{t.landing.nav.cta}</span>
+            <span className="xs:hidden">{t.landing.nav.ctaRes}</span>
           </Link>
         </div>
-
-        <button
-          className="md:hidden p-2"
-          style={{ color: "var(--text)" }}
-          onClick={() => setMenuOpen((v) => !v)}
-        >
-          {menuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
       </nav>
-      <div
-        className="pointer-events-none w-full shrink-0"
-        style={{
-          height: "1px",
-          background:
-            "linear-gradient(to right, transparent, rgba(108,99,255,0.4), rgba(255,255,255,0.08), rgba(108,99,255,0.4), transparent)",
-        }}
-      />
 
-      {/* ── Main content area ────────────────────────────────────────────── */}
       <div className="relative z-10 flex-1 flex items-center px-5 md:px-10 py-10">
         <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-stretch gap-10">
-          {/* LEFT — text + CTA */}
           <div className="w-full md:w-1/2 flex flex-col justify-between items-center md:items-start py-2 text-center md:text-left">
             <div>
-              {/* 1 — Eyebrow */}
-              <div style={fadeIn(mounted, 0)} className="mb-6">
-                <div
-                  className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border"
-                  style={{
-                    background: "rgba(108,99,255,0.08)",
-                    borderColor: "rgba(108,99,255,0.22)",
-                  }}
-                >
-                  <div
-                    className="w-1.5 h-1.5 rounded-full"
-                    style={{ background: "var(--accent2)" }}
-                  />
-                  <span
-                    className="text-[11px] font-medium tracking-widest uppercase"
-                    style={{
-                      color: "var(--accent2)",
-                      fontFamily: "DM Sans, sans-serif",
-                    }}
-                  >
-                    {t.landing.hero.eyebrow}
-                  </span>
+              <div className="mb-6" style={fadeInStyle(0)}>
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border max-w-full" style={{ background: "rgba(108, 99, 255, 0.08)", borderColor: "rgba(108, 99, 255, 0.22)" }}>
+                  <div className="w-1.5 h-1.5 rounded-full" style={{ background: "rgb(108, 99, 255)" }} />
+                  <span className="text-[9px] md:text-[11px] font-medium tracking-[0.1em] md:tracking-[0.2em] uppercase" style={{ color: "rgb(108, 99, 255)", fontFamily: "DM Sans, sans-serif" }}>{t.landing.hero.eyebrow}</span>
                 </div>
               </div>
-
-              {/* 2 — H1 */}
-              <h1
-                className="leading-[1.1] mb-6"
-                style={{
-                  fontFamily: "'Bricolage Grotesque', sans-serif",
-                  fontWeight: 800,
-                  fontSize: "clamp(2.5rem, 5vw, 4.2rem)",
-                  letterSpacing: "-0.03em",
-                  color: "var(--text)",
-                  maxWidth: "600px",
-                  ...fadeIn(mounted, 120),
-                }}
-              >
-                {t.landing.hero.headline}{" "}
-                <span style={{ color: "var(--accent)" }}>
-                  {t.landing.hero.headlineAccent}
-                </span>
+              <h1 className="leading-[1.1] mb-6" style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontWeight: 800, fontSize: "clamp(2.2rem, 5vw, 4.2rem)", letterSpacing: "-0.04em", color: "white", ...fadeInStyle(120) }}>
+                {t.landing.hero.headline} <span style={{ color: "rgb(108, 99, 255)" }}>{t.landing.hero.headlineAccent}</span>
               </h1>
-
-              {/* 3 — Subtitle */}
-              <p
-                className="text-base md:text-lg leading-relaxed mb-8"
-                style={{
-                  fontFamily: "DM Sans, sans-serif",
-                  color: "var(--muted)",
-                  maxWidth: "480px",
-                  ...fadeIn(mounted, 240),
-                }}
-              >
+              <p className="text-base md:text-lg leading-relaxed mb-8" style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.5)", maxWidth: "480px", ...fadeInStyle(240) }}>
                 {t.landing.hero.sub}
               </p>
-
-              {/* 4 — CTA */}
-              <div
-                className="flex flex-col items-center md:items-start gap-6 mb-10"
-                style={fadeIn(mounted, 360)}
-              >
-                {/* Grupo Botón */}
-                <div className="flex flex-col items-center md:items-start gap-2">
-                  <Link
-                    to="/register"
-                    className="inline-flex items-center px-8 py-4 rounded-xl font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98]"
-                    style={{
-                      background: "var(--accent)",
-                      fontFamily: "DM Sans, sans-serif",
-                      // MEJORA: Glow exterior sutil pero presente
-                      boxShadow:
-                        "0 0 40px rgba(108,99,255,0.4), 0 10px 20px rgba(0,0,0,0.3)",
-                    }}
-                  >
-                    {t.landing.hero.cta}
-                  </Link>
-                  <span
-                    className="text-xs"
-                    style={{
-                      color: "var(--muted)",
-                      fontFamily: "DM Sans, sans-serif",
-                    }}
-                  >
-                    {t.landing.hero.ctaSub}
-                  </span>
-                </div>
-
-                {/* MEJORA: Social proof subido aquí para reforzar el CTA */}
-                <div className="flex items-center justify-center md:justify-start gap-2">
-                  <div
-                    className="w-2 h-2 rounded-full"
-                    style={{
-                      background: "var(--success)",
-                      animation: "pulseDot 2s infinite",
-                    }}
-                  />
-                  <span
-                    className="text-xs"
-                    style={{
-                      color: "var(--muted)",
-                      fontFamily: "DM Sans, sans-serif",
-                    }}
-                  >
-                    {t.landing.hero.socialProof
-                      .split("150")
-                      .map((part, i, arr) =>
-                        i < arr.length - 1 ? (
-                          <span key={i}>
-                            {part}
-                            <span
-                              style={{
-                                color: "var(--success)",
-                                fontWeight: 600,
-                              }}
-                            >
-                              150
-                            </span>
-                          </span>
-                        ) : (
-                          part
-                        ),
-                      )}
-                  </span>
+              
+              <div className="flex flex-col items-center md:items-start gap-5 mb-10" style={fadeInStyle(360)}>
+                <Link to="/register" className="inline-flex items-center px-8 py-4 rounded-xl font-semibold text-white transition-all hover:scale-[1.02] active:scale-[0.98]" style={{ background: "linear-gradient(rgb(108, 99, 255) 0%, rgb(108, 99, 255) 100%)", boxShadow: "0 0 40px rgba(108,99,255,0.4), 0 10px 20px rgba(0,0,0,0.3)" }}>{t.landing.hero.cta}</Link>
+                <div className="flex flex-col items-center md:items-start gap-3">
+                  <span className="text-xs" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "DM Sans, sans-serif" }}>{t.landing.hero.ctaSub}</span>
+                  
+                  {/* SOCIAL PROOF */}
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mt-1" style={{ background: "rgba(34, 197, 94, 0.05)", borderColor: "rgba(34, 197, 94, 0.15)" }}>
+                    <div className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </div>
+                    <span className="text-[10px] md:text-[11px] font-medium" style={{ color: "rgba(34, 197, 94, 0.9)", fontFamily: "DM Sans, sans-serif" }}>
+                      {t.landing.hero.socialProof}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-
-            {/* 5 — Carrusel de Logos (Ahora solo contiene el carrusel) */}
-            <div className="w-full" style={fadeIn(mounted, 480)}>
-              <LogoCarousel logos={LOGOS} />
+            
+            <div className="w-full" style={fadeInStyle(480)}>
+              <LogoCarousel logos={BRANDS} />
             </div>
           </div>
-          {/* END LEFT */}
 
-          {/* RIGHT — Dashboard */}
-          <div
-            className="flex w-full md:w-1/2 relative"
-            style={{
-              opacity: mounted ? 1 : 0,
-              transform: mounted
-                ? "translateY(0) scale(1)"
-                : "translateY(20px) scale(0.98)",
-              transition:
-                "opacity 0.8s cubic-bezier(0.22,1,0.36,1) 550ms, transform 0.8s cubic-bezier(0.22,1,0.36,1) 550ms",
-            }}
-          >
-            <div
-              className="absolute -z-10 pointer-events-none rounded-3xl"
-              style={{
-                top: "15%",
-                left: "10%",
-                right: "10%",
-                bottom: "15%",
-                background:
-                  "radial-gradient(circle, var(--accent) 0%, transparent 70%)",
-                opacity: 0.07,
-                filter: "blur(50px)",
-              }}
-            />
-
+          {/* DASHBOARD: Se mantiene visible pero se ajusta el padding en el layout general */}
+          <div className="flex w-full md:w-1/2 relative" style={fadeInStyle(500)}>
+            <div className="absolute inset-0 -z-10 pointer-events-none" style={{ background: "radial-gradient(circle, rgba(108, 99, 255, 0.2) 0%, transparent 70%)", filter: "blur(60px)", transform: "scale(1.1)" }} />
             <FakeDashboard />
           </div>
-          {/* END RIGHT */}
         </div>
       </div>
 
       <style>{`
-  @keyframes heroFloat {
-    0%, 100% { transform: translateY(0); }
-    50%       { transform: translateY(-6px); }
-  }
-  @keyframes pulseDot {
-    0%, 100% { opacity: 1;   box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
-    50%       { opacity: 0.3; box-shadow: 0 0 0 5px rgba(239,68,68,0); }
-  }
-  @keyframes marquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-33.33%); } /* Cambiado a 33% para encajar con el triplicado */
-}
-`}</style>
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-33.33%); } }
+        .nav-btn-secondary-pro:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(108, 99, 255, 0.6) !important; color: white !important; transform: translateY(-1px); }
+        .nav-btn-primary-animated:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 10px 25px rgba(108, 99, 255, 0.5); }
+      `}</style>
     </section>
   );
 }
@@ -655,6 +486,7 @@ export function Hero() {
 // ─── Section 2 — The Problem ──────────────────────────────────────────────────
 function ProblemSection() {
   const t = useT();
+
   const problems = [
     {
       icon: <TrendingDown size={22} strokeWidth={1.5} />,
@@ -671,8 +503,22 @@ function ProblemSection() {
   ];
 
   return (
-    <section className="py-24 px-6" style={{ background: "var(--surface)" }}>
-      <div className="max-w-5xl mx-auto">
+    <section 
+      /* Mantenemos relative, py-24 y px-6 */
+      className="relative py-24 px-6 overflow-hidden Seamless-Section" 
+      /* Fondo plano idéntico a FeaturesSection */
+      style={{ background: "var(--surface)" }} 
+    >
+      {/* ── PUENTE VISUAL: DIVISOR DE LUZ SUPERIOR ── */}
+      <div 
+        className="absolute top-0 left-0 w-full h-px"
+        style={{ 
+          background: "linear-gradient(to right, transparent, rgba(108, 99, 255, 0.3), transparent)",
+          zIndex: 20 // Asegura que esté por encima de cualquier otro elemento
+        }}
+      />
+
+      <div className="max-w-5xl mx-auto relative z-10">
         <Reveal>
           <h2
             className="text-center mb-4"
@@ -688,59 +534,89 @@ function ProblemSection() {
           </h2>
           <p
             className="text-center mb-14 max-w-lg mx-auto"
-            style={{ fontFamily: "DM Sans, sans-serif", color: "var(--muted)" }}
+            style={{ 
+              fontFamily: "DM Sans, sans-serif", 
+              color: "rgba(255, 255, 255, 0.5)" 
+            }}
           >
             {t.landing.problem.sub}
           </p>
         </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {problems.map((p, i) => (
             <Reveal key={p.title} delay={i * 80}>
-              <ProblemCard {...p} />
+              <div 
+                className="problem-card-glow-border transition-all duration-500"
+                style={{
+                  border: "1px solid rgba(108, 99, 255, 0.2)",
+                  borderRadius: "1.25rem",
+                  background: "rgba(255, 255, 255, 0.02)",
+                  backdropFilter: "blur(10px)",
+                  padding: "2px" 
+                }}
+              >
+                <ProblemCard {...p} />
+              </div>
             </Reveal>
           ))}
         </div>
       </div>
+
+      <style>{`
+        .problem-card-glow-border:hover {
+          border-color: rgba(108, 99, 255, 0.6) !important;
+          background: rgba(108, 99, 255, 0.05);
+          transform: translateY(-6px);
+          box-shadow: 0 20px 40px -20px rgba(0,0,0,0.7), 0 0 20px rgba(108, 99, 255, 0.1);
+        }
+      `}</style>
     </section>
   );
 }
 
 function ProblemCard({ icon, title, desc }) {
-  const [hovered, setHovered] = useState(false);
   return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className="rounded-2xl p-6 border transition-colors duration-200 h-full"
-      style={{
-        background: "var(--surface2)",
-        borderColor: hovered ? "var(--accent)" : "var(--border)",
-      }}
-    >
-      <div
-        className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-        style={{ background: "rgba(108,99,255,0.12)", color: "var(--accent)" }}
-      >
-        {icon}
+    <>
+      <div className="problem-card rounded-2xl p-6 border transition-colors duration-200 h-full">
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+          style={{
+            background: "rgba(108,99,255,0.12)",
+            color: "var(--accent)",
+          }}
+        >
+          {icon}
+        </div>
+        <h3
+          className="mb-2 font-semibold"
+          style={{
+            fontFamily: "Syne, sans-serif",
+            color: "var(--text)",
+            fontSize: "1rem",
+          }}
+        >
+          {title}
+        </h3>
+        <p
+          className="text-sm leading-relaxed"
+          style={{ fontFamily: "DM Sans, sans-serif", color: "var(--muted)" }}
+        >
+          {desc}
+        </p>
       </div>
-      <h3
-        className="mb-2 font-semibold"
-        style={{
-          fontFamily: "Syne, sans-serif",
-          color: "var(--text)",
-          fontSize: "1rem",
-        }}
-      >
-        {title}
-      </h3>
-      <p
-        className="text-sm leading-relaxed"
-        style={{ fontFamily: "DM Sans, sans-serif", color: "var(--muted)" }}
-      >
-        {desc}
-      </p>
-    </div>
+
+      <style>{`
+        .problem-card {
+          background: var(--surface2);
+          border-color: var(--border);
+        }
+        /* El hover de CSS es instantáneo y no se bloquea nunca */
+        .problem-card:hover {
+          border-color: var(--accent);
+        }
+      `}</style>
+    </>
   );
 }
 
@@ -748,95 +624,102 @@ function ProblemCard({ icon, title, desc }) {
 function HowItWorksSection() {
   const t = useT();
   const steps = [
-    {
-      num: "01",
-      icon: <Plug size={20} strokeWidth={1.5} />,
-      ...t.landing.solution.connect,
-    },
-    {
-      num: "02",
-      icon: <BarChart3 size={20} strokeWidth={1.5} />,
-      ...t.landing.solution.analyze,
-    },
-    {
-      num: "03",
-      icon: <Zap size={20} strokeWidth={1.5} />,
-      ...t.landing.solution.act,
-    },
+    { num: "01", icon: <Plug size={24} strokeWidth={1.5} />, ...t.landing.solution.connect },
+    { num: "02", icon: <BarChart3 size={24} strokeWidth={1.5} />, ...t.landing.solution.analyze },
+    { num: "03", icon: <Zap size={24} strokeWidth={1.5} />, ...t.landing.solution.act },
   ];
 
   return (
-    <section className="py-24 px-6" style={{ background: "var(--bg)" }}>
-      <div className="max-w-5xl mx-auto">
+    <section 
+      className="relative py-32 px-6 overflow-hidden" 
+      style={{ background: "#08080C" }}
+    >
+      <div className="absolute top-0 left-0 w-full h-px" style={{ background: "linear-gradient(to right, transparent, rgba(108, 99, 255, 0.3), transparent)" }} />
+
+      <div className="max-w-5xl mx-auto relative z-10">
         <Reveal>
-          <h2
-            className="text-center mb-4"
-            style={{
-              fontFamily: "Syne, sans-serif",
-              fontWeight: 700,
-              fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
-              letterSpacing: "-0.02em",
-              color: "var(--text)",
-            }}
-          >
-            {t.landing.solution.heading}
-          </h2>
-          <p
-            className="text-center mb-16 max-w-md mx-auto"
-            style={{ fontFamily: "DM Sans, sans-serif", color: "var(--muted)" }}
-          >
-            {t.landing.solution.sub}
-          </p>
+          <div className="text-center mb-14"> 
+            <h2
+              className="text-center mb-4"
+              style={{
+                fontFamily: "Syne, sans-serif",
+                fontWeight: 700,
+                fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
+                letterSpacing: "-0.02em",
+                color: "var(--text)",
+              }}
+            >
+              {t.landing.solution.heading}
+            </h2>
+            <p
+              className="text-center max-w-lg mx-auto"
+              style={{ 
+                fontFamily: "DM Sans, sans-serif", 
+                color: "rgba(255, 255, 255, 0.5)" 
+              }}
+            >
+              {t.landing.solution.sub}
+            </p>
+            {t.landing.solution.sub2 && (
+              <p className="mt-2 opacity-30 text-xs" style={{ fontFamily: "DM Sans, sans-serif" }}>
+                {t.landing.solution.sub2}
+              </p>
+            )}
+          </div>
         </Reveal>
 
         <div className="relative">
-          {/* Connector line — desktop only */}
-          <div
-            className="hidden md:block absolute top-8 left-0 right-0 h-px"
-            style={{
-              background:
-                "linear-gradient(to right, transparent, var(--accent), var(--accent2), transparent)",
-              opacity: 0.3,
-              marginLeft: "calc(16.666% + 2rem)",
-              marginRight: "calc(16.666% + 2rem)",
-            }}
-          />
+          {/* ── LÍNEAS CONECTORAS (Ajustadas para visibilidad) ── */}
+          <div className="hidden md:block absolute top-10 left-0 right-0 h-[2px] pointer-events-none" style={{ width: "66%", margin: "0 auto", zIndex: 0 }}>
+            {/* Conexión 01 -> 02 */}
+            <div 
+              className="absolute top-0 left-0 h-full w-1/2"
+              style={{
+                paddingRight: "2rem",
+                paddingLeft: "2rem",
+                background: "linear-gradient(to right, #6C63FF, #8B85FF)",
+                backgroundClip: "content-box",
+                opacity: 0.4
+              }}
+            />
+            {/* Conexión 02 -> 03 */}
+            <div 
+              className="absolute top-0 right-0 h-full w-1/2"
+              style={{
+                paddingLeft: "2rem",
+                paddingRight: "2rem",
+                background: "linear-gradient(to right, #8B85FF, #6C63FF)",
+                backgroundClip: "content-box",
+                opacity: 0.4
+              }}
+            />
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 relative z-10">
             {steps.map((s, i) => (
               <Reveal key={s.num} delay={i * 100}>
-                <div className="flex flex-col items-center text-center">
-                  <div
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5 relative z-10 border border-[var(--border)]"
-                    style={{ background: "var(--surface2)" }}
+                <div className="flex flex-col items-center group cursor-pointer">
+                  {/* Círculo del Número */}
+                  <div 
+                    className="w-20 h-20 rounded-2xl flex items-center justify-center mb-10 relative transition-all duration-500 ease-out border" 
+                    style={{ 
+                      background: "rgba(8, 8, 12, 1)", // Fondo sólido para tapar la línea detrás
+                      borderColor: "rgba(108, 99, 255, 0.4)", 
+                      boxShadow: "inset 0 0 15px rgba(108, 99, 255, 0.1)" 
+                    }}
                   >
-                    <span
-                      className="font-mono font-semibold"
-                      style={{ fontSize: "1.1rem", color: "var(--accent)" }}
-                    >
-                      {s.num}
-                    </span>
+                    <span className="font-mono text-2xl font-bold" style={{ color: "#8B85FF", textShadow: "0 0 10px rgba(108, 99, 255, 0.3)" }}>{s.num}</span>
                   </div>
-                  <div className="mb-2" style={{ color: "var(--accent2)" }}>
+
+                  <div className="mb-6 p-3 rounded-xl transition-all duration-500 bg-white/5" style={{ color: "#6C63FF", filter: "drop-shadow(0 0 8px rgba(108, 99, 255, 0.5))" }}>
                     {s.icon}
                   </div>
-                  <h3
-                    className="mb-2 font-semibold"
-                    style={{
-                      fontFamily: "Syne, sans-serif",
-                      color: "var(--text)",
-                      fontSize: "1.1rem",
-                    }}
-                  >
+                  
+                  <h3 className="text-2xl font-bold mb-4 transition-colors duration-300 text-white" style={{ fontFamily: "Syne, sans-serif" }}>
                     {s.title}
                   </h3>
-                  <p
-                    className="text-sm leading-relaxed max-w-xs"
-                    style={{
-                      fontFamily: "DM Sans, sans-serif",
-                      color: "var(--muted)",
-                    }}
-                  >
+                  
+                  <p className="text-[15px] opacity-60 leading-relaxed text-center px-4 transition-all duration-300 group-hover:opacity-100" style={{ fontFamily: "DM Sans, sans-serif", color: "#E0E0FF" }}>
                     {s.desc}
                   </p>
                 </div>
@@ -845,6 +728,20 @@ function HowItWorksSection() {
           </div>
         </div>
       </div>
+
+      <style>{`
+        .group:hover div:first-of-type {
+          transform: translateY(-12px);
+          background: rgba(108, 99, 255, 0.15) !important;
+          border-color: #6C63FF !important;
+          box-shadow: 0 20px 40px -10px rgba(108, 99, 255, 0.5);
+        }
+        .group:hover div:nth-of-type(2) { 
+          color: #8B85FF !important; 
+          transform: scale(1.1); 
+          filter: drop-shadow(0 0 12px rgba(108, 99, 255, 0.8)) !important; 
+        }
+      `}</style>
     </section>
   );
 }
@@ -872,7 +769,17 @@ function FeaturesSection() {
   ];
 
   return (
-    <section className="py-24 px-6" style={{ background: "var(--surface)" }}>
+    /* He añadido 'relative' para posicionar el borde */
+    <section className="relative py-24 px-6" style={{ background: "var(--surface)" }}>
+      
+      {/* ── PUENTE VISUAL: BORDE Y DEGRADADO SUPERIOR ── */}
+      <div 
+        className="absolute top-0 left-0 w-full h-px"
+        style={{ 
+          background: "linear-gradient(to right, transparent, rgba(108, 99, 255, 0.3), transparent)" 
+        }}
+      />
+
       <div className="max-w-5xl mx-auto">
         <Reveal>
           <h2
@@ -914,40 +821,50 @@ function FeaturesSection() {
 }
 
 function FeatureCard({ icon, title, desc }) {
-  const [hovered, setHovered] = useState(false);
+  // Eliminamos el useState y los eventos onMouseEnter/onMouseLeave
   return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className="rounded-2xl p-6 border transition-all duration-200 h-full"
-      style={{
-        background: hovered ? "rgba(108,99,255,0.04)" : "var(--surface2)",
-        borderColor: hovered ? "var(--accent)" : "var(--border)",
-      }}
-    >
-      <div
-        className="w-9 h-9 rounded-xl flex items-center justify-center mb-4"
-        style={{ background: "rgba(108,99,255,0.12)", color: "var(--accent)" }}
-      >
-        {icon}
+    <>
+      <div className="feature-card rounded-2xl p-6 border transition-all duration-200 h-full">
+        <div
+          className="w-9 h-9 rounded-xl flex items-center justify-center mb-4"
+          style={{
+            background: "rgba(108,99,255,0.12)",
+            color: "var(--accent)",
+          }}
+        >
+          {icon}
+        </div>
+        <h3
+          className="mb-2 font-semibold"
+          style={{
+            fontFamily: "Syne, sans-serif",
+            color: "var(--text)",
+            fontSize: "1rem",
+          }}
+        >
+          {title}
+        </h3>
+        <p
+          className="text-sm leading-relaxed"
+          style={{ fontFamily: "DM Sans, sans-serif", color: "var(--muted)" }}
+        >
+          {desc}
+        </p>
       </div>
-      <h3
-        className="mb-2 font-semibold"
-        style={{
-          fontFamily: "Syne, sans-serif",
-          color: "var(--text)",
-          fontSize: "1rem",
-        }}
-      >
-        {title}
-      </h3>
-      <p
-        className="text-sm leading-relaxed"
-        style={{ fontFamily: "DM Sans, sans-serif", color: "var(--muted)" }}
-      >
-        {desc}
-      </p>
-    </div>
+
+      {/* Aplicamos exactamente el mismo comportamiento de color que tenías en el state */}
+      <style>{`
+        .feature-card {
+          background: var(--surface2);
+          border-color: var(--border);
+        }
+        /* El hover de CSS nunca falla, por muy rápido que muevas el ratón */
+        .feature-card:hover {
+          background: rgba(108,99,255,0.04);
+          border-color: var(--accent);
+        }
+      `}</style>
+    </>
   );
 }
 
@@ -1031,72 +948,163 @@ function MetricsSection() {
   ];
 
   return (
-    <section className="py-20 px-6" style={{ background: "var(--bg)" }}>
+    <section className="relative py-24 px-6" style={{ background: "var(--bg)" }}>
+      
+      {/* Divisor superior sutil */}
+      <div 
+        className="absolute top-0 left-0 w-full h-px"
+        style={{ 
+          background: "linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent)" 
+        }}
+      />
+
       <div className="max-w-5xl mx-auto">
+        <Reveal>
+          <div className="text-center mb-16">
+            <h2
+              className="mb-4"
+              style={{
+                fontFamily: "Syne, sans-serif",
+                fontWeight: 700,
+                fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
+                letterSpacing: "-0.02em",
+                color: "var(--text)",
+              }}
+            >
+              {t.landing.metrics.heading}
+            </h2>
+            <p
+              className="max-w-lg mx-auto"
+              style={{
+                fontFamily: "DM Sans, sans-serif",
+                color: "var(--muted)",
+              }}
+            >
+              {t.landing.metrics.sub}
+            </p>
+          </div>
+        </Reveal>
+
+        {/* Contenedor principal con borde marcado */}
         <div
-          className="grid grid-cols-2 md:grid-cols-4 rounded-2xl border overflow-hidden"
-          style={{ borderColor: "var(--border)" }}
+          className="grid grid-cols-2 md:grid-cols-4 rounded-2xl border overflow-hidden select-none"
+          style={{
+            borderColor: "rgba(255, 255, 255, 0.15)",
+            background: "var(--surface2)",
+          }}
         >
           {metrics.map((m, i) => (
-            <Reveal key={m.label} delay={i * 80}>
-              <div
-                className="flex flex-col items-center justify-center py-10 px-6 text-center border-b md:border-b-0 border-r last:border-r-0 border-[var(--border)]"
-                style={{ background: "var(--surface2)" }}
-              >
-                <span
-                  className="font-mono font-semibold mb-2"
-                  style={{
-                    fontSize: "clamp(1.5rem, 3vw, 2rem)",
-                    color: "var(--accent)",
-                  }}
-                >
-                  {m.value}
-                </span>
-                <span
-                  className="text-xs text-center leading-tight"
-                  style={{
-                    fontFamily: "DM Sans, sans-serif",
-                    color: "var(--muted)",
-                  }}
-                >
-                  {m.label}
-                </span>
-              </div>
-            </Reveal>
+            <div
+              key={m.label}
+              /* Bordes laterales y de base marcados para cada carta */
+              className="metric-card relative border-r last:border-r-0 border-b md:border-b-0 border-white/10 flex transition-all duration-500 cursor-default"
+            >
+              <Reveal delay={i * 80} className="flex-1 flex w-full h-full">
+                <div className="flex-1 flex flex-col items-center py-12 px-5 text-center">
+                  
+                  {/* Solo este contenedor sube (< 5 min, etc) */}
+                  <div className="metric-value-container h-12 flex items-center justify-center mb-3 transition-all duration-500">
+                    <span
+                      className="font-mono font-semibold transition-colors duration-500"
+                      style={{
+                        fontSize: "clamp(1.5rem, 3vw, 2rem)",
+                        color: "var(--accent)",
+                      }}
+                    >
+                      {m.value}
+                    </span>
+                  </div>
+
+                  {/* El subtítulo se queda fijo */}
+                  <div
+                    className="flex items-start justify-center"
+                    style={{ minHeight: "2.5rem" }}
+                  >
+                    <span
+                      className="text-[10px] sm:text-xs uppercase tracking-widest leading-tight transition-colors duration-500"
+                      style={{
+                        fontFamily: "DM Sans, sans-serif",
+                        color: "var(--muted)",
+                        maxWidth: "130px",
+                      }}
+                    >
+                      {m.label}
+                    </span>
+                  </div>
+                </div>
+              </Reveal>
+            </div>
           ))}
         </div>
       </div>
+
+      <style>{`
+        /* Cambio al color específico #36363f solicitado */
+        .metric-card:hover {
+          background: #36363f !important;
+          z-index: 10;
+        }
+
+        /* Solo sube el valor principal */
+        .metric-card:hover .metric-value-container {
+          transform: translateY(-10px);
+        }
+
+        /* Todo el texto pasa a blanco puro en hover */
+        .metric-card:hover span {
+          color: #ffffff !important;
+        }
+
+        /* Transiciones suaves para todos los elementos */
+        .metric-card, .metric-value-container, span {
+          transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+      `}</style>
     </section>
   );
 }
-
 // ─── Section 6 — Pricing ──────────────────────────────────────────────────────
 function PricingSection() {
   const t = useT();
   const { free, pro } = t.landing.pricing;
 
   return (
-    <section className="py-24 px-6" style={{ background: "var(--surface)" }}>
+    <section className="relative py-24 px-6" style={{ background: "var(--surface)" }}>
+      
+      {/* ── DIVISOR DE SECCIÓN (5 a 6) ── */}
+      <div 
+        className="absolute top-0 left-0 w-full h-px"
+        style={{ 
+          background: "linear-gradient(to right, transparent, rgba(108, 99, 255, 0.3), transparent)" 
+        }}
+      />
+
       <div className="max-w-4xl mx-auto">
         <Reveal>
-          <h2
-            className="text-center mb-4"
-            style={{
-              fontFamily: "Syne, sans-serif",
-              fontWeight: 700,
-              fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
-              letterSpacing: "-0.02em",
-              color: "var(--text)",
-            }}
-          >
-            {t.landing.pricing.heading}
-          </h2>
-          <p
-            className="text-center mb-14"
-            style={{ fontFamily: "DM Sans, sans-serif", color: "var(--muted)" }}
-          >
-            {t.landing.pricing.sub}
-          </p>
+          {/* ── ENCABEZADO SINCRONIZADO CON PROBLEM SECTION ── */}
+          <div className="text-center mb-14">
+            <h2
+              className="mb-4"
+              style={{
+                fontFamily: "Syne, sans-serif",
+                fontWeight: 700,
+                fontSize: "clamp(1.75rem, 4vw, 2.5rem)", // Sincronizado
+                letterSpacing: "-0.02em",
+                color: "var(--text)",
+              }}
+            >
+              {t.landing.pricing.heading}
+            </h2>
+            <p
+              className="max-w-lg mx-auto"
+              style={{ 
+                fontFamily: "DM Sans, sans-serif", 
+                color: "rgba(255, 255, 255, 0.5)" // Color suavizado exacto
+              }}
+            >
+              {t.landing.pricing.sub}
+            </p>
+          </div>
         </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1153,18 +1161,12 @@ function PricingSection() {
 
               <Link
                 to="/register"
-                className="w-full text-center py-3 rounded-xl text-sm font-semibold border transition-colors duration-150 block"
+                className="pricing-btn-free w-full text-center py-3 rounded-xl text-sm font-semibold border transition-colors duration-150 block"
                 style={{
                   borderColor: "var(--border)",
                   color: "var(--text)",
                   fontFamily: "DM Sans, sans-serif",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.borderColor = "var(--accent)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.borderColor = "var(--border)")
-                }
               >
                 {free.cta}
               </Link>
@@ -1238,17 +1240,11 @@ function PricingSection() {
 
               <Link
                 to="/register"
-                className="w-full text-center py-3 rounded-xl text-sm font-semibold text-white transition-colors duration-150 block"
+                className="pricing-btn-pro w-full text-center py-3 rounded-xl text-sm font-semibold text-white transition-colors duration-150 block"
                 style={{
                   background: "var(--accent)",
                   fontFamily: "DM Sans, sans-serif",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = "var(--accent2)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = "var(--accent)")
-                }
               >
                 {pro.cta}
               </Link>
@@ -1264,6 +1260,15 @@ function PricingSection() {
           </Reveal>
         </div>
       </div>
+
+      <style>{`
+        .pricing-btn-free:hover {
+          border-color: var(--accent) !important;
+        }
+        .pricing-btn-pro:hover {
+          background: var(--accent2) !important;
+        }
+      `}</style>
     </section>
   );
 }
@@ -1299,6 +1304,14 @@ function FinalCTASection() {
       className="py-28 px-6 relative overflow-hidden"
       style={{ background: "var(--bg)" }}
     >
+      <div 
+        className="absolute top-0 left-0 w-full h-px"
+        style={{ 
+          background: "linear-gradient(to right, transparent, rgba(108, 99, 255, 0.3), transparent)",
+          zIndex: 20 
+        }}
+      />
+
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -1307,15 +1320,17 @@ function FinalCTASection() {
         }}
       />
 
-      <div className="relative z-10 max-w-2xl mx-auto text-center">
+      <div className="relative z-10 max-w-4xl mx-auto text-center">
         <Reveal>
           <h2
-            className="mb-5"
+            className="mb-6"
             style={{
-              fontFamily: "Syne, sans-serif",
+              fontFamily: "Bricolage Grotesque, sans-serif",
               fontWeight: 800,
-              fontSize: "clamp(2rem, 5vw, 3.25rem)",
-              letterSpacing: "-0.03em",
+              // Usamos exactamente la misma medida del Hero
+              fontSize: "clamp(2.2rem, 5vw, 4.2rem)", 
+              lineHeight: "1.1",
+              letterSpacing: "-0.04em",
               color: "var(--text)",
             }}
           >
@@ -1323,41 +1338,47 @@ function FinalCTASection() {
             <span style={{ color: "var(--accent)" }}>{cta.headingAccent}</span>
           </h2>
           <p
-            className="mb-10 text-lg"
-            style={{ fontFamily: "DM Sans, sans-serif", color: "var(--muted)" }}
+            className="mb-10 text-base md:text-lg mx-auto"
+            style={{ 
+              fontFamily: "DM Sans, sans-serif", 
+              color: "var(--muted)",
+              maxWidth: "540px", // Un poco más ancho para equilibrar el h2 más grande
+              lineHeight: "1.6"
+            }}
           >
             {cta.sub}
           </p>
 
           <Link
             to="/register"
-            className="inline-block px-10 py-4 rounded-xl text-base font-semibold text-white transition-colors duration-150"
+            className="cta-final-btn inline-block px-10 py-4 rounded-xl text-base font-semibold text-white transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
             style={{
               background: "var(--accent)",
               fontFamily: "DM Sans, sans-serif",
+              boxShadow: "0 10px 30px rgba(108, 99, 255, 0.3)"
             }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.background = "var(--accent2)")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.background = "var(--accent)")
-            }
           >
             {cta.cta}
           </Link>
 
           <p
-            className="mt-5 text-sm"
-            style={{ color: "var(--muted)", fontFamily: "DM Sans, sans-serif" }}
+            className="mt-6 text-xs md:text-sm"
+            style={{ color: "var(--muted)", fontFamily: "DM Sans, sans-serif", opacity: 0.6 }}
           >
             {cta.ctaSub}
           </p>
         </Reveal>
       </div>
+
+      <style>{`
+        .cta-final-btn:hover {
+          background: var(--accent2) !important;
+          box-shadow: 0 15px 40px rgba(108, 99, 255, 0.45);
+        }
+      `}</style>
     </section>
   );
 }
-
 // ─── Section 8 — Footer ───────────────────────────────────────────────────────
 function Footer() {
   const t = useT();
@@ -1366,16 +1387,27 @@ function Footer() {
 
   return (
     <footer
-      className="border-t px-6 py-10"
-      style={{ background: "var(--surface)", borderColor: "var(--border)" }}
+      /* Eliminamos border-t para usar nuestro divisor de luz */
+      className="relative px-6 py-10"
+      style={{ background: "var(--surface)" }}
     >
-      <div className="max-w-5xl mx-auto">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-          <Link to="/">
-            <Logo />
-          </Link>
+      {/* ── DIVISOR DE SECCIÓN (7 a Footer) ── */}
+      <div 
+        className="absolute top-0 left-0 w-full h-px"
+        style={{ 
+          background: "linear-gradient(to right, transparent, rgba(108, 99, 255, 0.3), transparent)" 
+        }}
+      />
 
-          <div className="flex items-center gap-6 flex-wrap justify-center">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:grid md:grid-cols-3 items-center gap-8 md:gap-4">
+          <div className="w-full flex justify-center md:justify-start">
+            <Link to="/">
+              <Logo />
+            </Link>
+          </div>
+
+          <div className="w-full flex items-center gap-6 sm:gap-8 justify-center order-3 md:order-2">
             {[
               { to: "/privacy", label: t.landing.footer.privacy },
               { to: "/terms", label: t.landing.footer.terms },
@@ -1384,45 +1416,37 @@ function Footer() {
               <Link
                 key={to}
                 to={to}
-                className="text-sm transition-colors duration-150"
+                className="footer-nav-link text-sm transition-colors duration-150 whitespace-nowrap"
                 style={{
                   color: "var(--muted)",
                   fontFamily: "DM Sans, sans-serif",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "var(--text)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "var(--muted)")
-                }
               >
                 {label}
               </Link>
             ))}
           </div>
 
-          {/* Static language selector */}
-          <div className="flex items-center gap-1 rounded-lg border border-[var(--border)] p-1">
-            {langs.map((lang) => (
-              <button
-                key={lang}
-                onClick={() => setActiveLang(lang)}
-                className="px-3 py-1 rounded-md text-xs font-semibold transition-colors duration-150"
-                style={{
-                  fontFamily: "DM Sans, sans-serif",
-                  background:
-                    activeLang === lang ? "var(--accent)" : "transparent",
-                  color: activeLang === lang ? "white" : "var(--muted)",
-                }}
-              >
-                {lang}
-              </button>
-            ))}
+          <div className="w-full flex justify-center md:justify-end order-2 md:order-3">
+            <div className="flex items-center gap-1 rounded-lg border border-[var(--border)] p-1">
+              {langs.map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => setActiveLang(lang)}
+                  className={`lang-btn px-3 py-1 rounded-md text-xs font-semibold transition-colors duration-150 ${
+                    activeLang === lang ? "active" : ""
+                  }`}
+                  style={{ fontFamily: "DM Sans, sans-serif" }}
+                >
+                  {lang}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
         <div
-          className="mt-8 pt-6 text-center text-xs border-t"
+          className="mt-12 pt-6 text-center text-xs border-t"
           style={{
             borderColor: "var(--border)",
             color: "var(--muted)",
@@ -1432,6 +1456,24 @@ function Footer() {
           {t.landing.footer.copyright}
         </div>
       </div>
+
+      <style>{`
+        .footer-nav-link:hover {
+          color: var(--text) !important;
+        }
+        .lang-btn {
+          background: transparent;
+          color: var(--muted);
+        }
+        .lang-btn.active {
+          background: var(--accent) !important;
+          color: white !important;
+        }
+        .lang-btn:not(.active):hover {
+          color: var(--text) !important;
+          background: rgba(255, 255, 255, 0.05) !important;
+        }
+      `}</style>
     </footer>
   );
 }
