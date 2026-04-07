@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo, useSyncExternalStore } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../app/slices/authSlice.js";
 import { useT } from "../../hooks/useT.js";
+import { landingLanguageStore } from "../../i18n/landingLanguageStore.js";
 
 import Logo from "../../components/ui/logo.jsx";
 import {
@@ -21,6 +22,7 @@ import {
   ChevronDown,
   X,
   Menu,
+  Globe,
 } from "lucide-react";
 
 // ─── Entry animation helper ───────────────────────────────────────────────────
@@ -142,7 +144,7 @@ function FakeDashboard() {
       className="w-full max-w-[600px] mx-auto flex flex-col rounded-2xl border"
       style={{
         borderColor: "rgba(255, 255, 255, 0.08)",
-        background: "#0a0a0b",
+        background: "#12122a",
         boxShadow: "0 20px 50px rgba(0,0,0,0.4)",
         overflow: "visible",
       }}
@@ -362,11 +364,13 @@ function LogoCarousel({ logos }) {
             key={i}
             className="px-3 py-1.5 rounded-lg border text-[10px] font-semibold tracking-widest shrink-0"
             style={{
-              borderColor: "rgba(255,255,255,0.1)", // Borde sutil
-              background: "rgba(255,255,255,0.02)", // Fondo Premium
-              color: "rgba(255,255,255,0.4)", // Texto atenuado
+              borderColor: "rgba(255,255,255,0.15)",
+              background: "rgba(255,255,255,0.03)",
+              color: "rgba(255,255,255,0.6)",
               fontFamily: "DM Sans, sans-serif",
               textTransform: "uppercase",
+              filter: "brightness(0) invert(1)",
+              opacity: 0.6,
             }}
           >
             {name}
@@ -378,6 +382,112 @@ function LogoCarousel({ logos }) {
 }
 
 // ─── HERO ─────────────────────────────────────────────────────────────────────
+// ─── Language Selector (Navbar) ───────────────────────────────────────────────
+function LanguageSelector() {
+  const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const ref = useRef(null);
+
+  const activeLang = useSyncExternalStore(
+    landingLanguageStore.subscribe,
+    landingLanguageStore.getLanguage
+  );
+
+  // Guardia de hidratación — no renderizar hasta que el componente esté montado
+  useEffect(() => { setMounted(true); }, []);
+
+  // Actualizar el atributo lang del <html> en cada cambio de idioma
+  useEffect(() => {
+    if (mounted) document.documentElement.lang = activeLang;
+  }, [activeLang, mounted]);
+
+  // Cerrar dropdown al hacer click fuera
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  const langs = [
+    { code: "es", label: "ES", ariaLabel: "Cambiar a Español" },
+    { code: "en", label: "EN", ariaLabel: "Switch to English" },
+    { code: "ca", label: "CA", ariaLabel: "Canviar a Català" },
+  ];
+
+  // No renderizar hasta que el componente esté montado (evita hidratación SSR)
+  if (!mounted) return <div className="w-[72px] flex-shrink-0" />;
+
+  return (
+    <div ref={ref} className="relative w-[72px] flex-shrink-0 flex items-center justify-center">
+      {/* Capa interna: overflow-hidden garantiza que el botón no puede empujar hacia afuera */}
+      <div className="w-full overflow-hidden">
+        <button
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-haspopup="listbox"
+          aria-label="Seleccionar idioma"
+          className="flex items-center justify-center gap-1.5 w-full min-h-[44px] sm:min-h-0 px-2.5 py-2 rounded-lg text-xs font-semibold transition-colors duration-150 hover:bg-white/10"
+          style={{
+            color: "rgba(255, 255, 255, 0.7)",
+            background: "transparent",
+            border: "none",
+            fontFamily: "DM Sans, sans-serif",
+          }}
+        >
+          <Globe size={14} strokeWidth={1.5} className="flex-shrink-0" />
+          <span className="inline-block w-6 text-center">{activeLang.toUpperCase()}</span>
+        </button>
+      </div>
+
+      {/* Dropdown con animación de entrada opacity + scale */}
+      <div
+        className="absolute right-0 mt-2 rounded-xl overflow-hidden"
+        style={{
+          background: "rgba(18, 15, 29, 0.92)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          border: "1px solid rgba(255, 255, 255, 0.08)",
+          boxShadow: "0 16px 40px rgba(0, 0, 0, 0.55)",
+          zIndex: 9999,
+          minWidth: "80px",
+          maxWidth: "calc(100vw - 2rem)",
+          opacity: open ? 1 : 0,
+          transform: open ? "scale(1)" : "scale(0.95)",
+          pointerEvents: open ? "auto" : "none",
+          transformOrigin: "top right",
+          transition: "opacity 0.15s ease-out, transform 0.15s ease-out",
+        }}
+      >
+        {langs.map(({ code, label, ariaLabel }) => (
+          <button
+            key={code}
+            onClick={() => { landingLanguageStore.setLanguage(code); setOpen(false); }}
+            aria-label={ariaLabel}
+            className="w-full text-left px-4 py-2 text-xs font-semibold transition-colors duration-150"
+            style={{
+              color: activeLang === code ? "rgb(108, 99, 255)" : "rgba(255, 255, 255, 0.6)",
+              background: activeLang === code ? "rgba(108, 99, 255, 0.08)" : "transparent",
+              fontFamily: "DM Sans, sans-serif",
+              display: "block",
+            }}
+            onMouseEnter={(e) => {
+              if (activeLang !== code) e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+            }}
+            onMouseLeave={(e) => {
+              if (activeLang !== code) e.currentTarget.style.background = "transparent";
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function Hero() {
   const [mounted, setMounted] = useState(false);
    const t = useT();
@@ -395,12 +505,12 @@ export function Hero() {
     <section className="relative overflow-hidden flex flex-col" style={{ background: "rgb(18, 15, 29)", minHeight: "100svh", userSelect: "none" }}>
       <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(108, 99, 255, 0.08) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 30% 30%, rgba(108, 99, 255, 0.18) 0%, transparent 60%)" }} />
-      <div className="absolute bottom-0 left-0 w-full h-80 pointer-events-none" style={{ background: "linear-gradient(transparent, rgb(8, 8, 12))" }} />
+      <div className="absolute bottom-0 left-0 w-full h-80 pointer-events-none" style={{ background: "linear-gradient(transparent, #1a1a2e)" }} />
 
       {/* NAV MODIFICADO PARA RESPONSIVE */}
       <nav className="sticky top-0 z-50 flex items-center justify-between px-4 md:px-10 py-4 md:py-5 shrink-0" 
         style={{ background: "rgba(13, 11, 22, 0.85)", backdropFilter: "blur(28px) saturate(180%)", WebkitBackdropFilter: "blur(28px) saturate(180%)", borderBottom: "1px solid transparent", borderImage: "linear-gradient(to right, transparent, rgba(108, 99, 255, 0.45), rgba(255, 255, 255, 0.1), rgba(108, 99, 255, 0.45), transparent) 1 / 1 / 0 stretch", boxShadow: "rgba(0, 0, 0, 0.8) 0px 15px 40px -12px" }}>
-        <Link to="/" className="nav-logo-link transition-all duration-300 active:scale-95">
+        <Link to="/" className="nav-logo-link transition-all duration-300 active:scale-95 flex-shrink-0">
           <div className="nav-logo-glow flex items-center">
             {/* Logo escalado para móvil */}
             <div className="w-[60px] h-[45px] md:w-[80px] md:h-[60px]" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -411,17 +521,40 @@ export function Hero() {
             </span>
           </div>
         </Link>
-        <div className="flex items-center gap-2 md:gap-4">
-          {/* Iniciar sesión: Texto corto o escondido en móviles muy pequeños */}
-          <Link to="/login" className="nav-btn-secondary-pro px-3 md:px-5 py-2 rounded-lg text-xs md:text-sm font-medium transition-all" style={{ color: "rgba(255, 255, 255, 0.7)", background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.08)", fontFamily: "DM Sans, sans-serif" }}>
-            <span className="hidden xs:inline">{t.landing.nav.login}</span>
-            <span className="xs:hidden">{t.landing.nav.login}</span>
-          </Link>
-          {/* Empezar: Texto dinámico */}
-          <Link to="/register" className="nav-btn-primary-animated px-3 md:px-5 py-2 rounded-lg text-xs md:text-sm font-medium text-white transition-all whitespace-nowrap" style={{ background: "rgb(108, 99, 255)", fontFamily: "DM Sans, sans-serif", boxShadow: "0 0 25px rgba(108, 99, 255, 0.35)" }}>
-            <span className="hidden xs:inline">{t.landing.nav.cta}</span>
-            <span className="xs:hidden">{t.landing.nav.ctaRes}</span>
-          </Link>
+        <div className="flex items-center gap-1 sm:gap-3">
+          {/* Selector: doble capa de ancho fijo — outer en Navbar + inner en el componente */}
+          <div className="relative w-[72px] flex-shrink-0">
+            <LanguageSelector />
+          </div>
+          {/* Grupo de botones aislado: flex-shrink-0 garantiza que no sea empujado por el selector */}
+          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+            {/* Login mobile: icono User con touch target WCAG 44×44px — solo en mobile */}
+            <Link
+              to="/login"
+              aria-label={t.landing.nav.login}
+              className="sm:hidden flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+              style={{ color: "rgba(255, 255, 255, 0.65)" }}
+            >
+              <User size={18} />
+            </Link>
+            {/* Login desktop: ancho fijo sm:w-[9rem] — el texto cambia, la caja nunca */}
+            <Link
+              to="/login"
+              className="hidden sm:inline-flex sm:w-[9rem] sm:justify-center flex-shrink-0 nav-btn-secondary-pro items-center px-3 py-2 rounded-lg text-xs md:text-sm font-medium transition-colors whitespace-nowrap overflow-hidden"
+              style={{ color: "rgba(255, 255, 255, 0.7)", background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.08)", fontFamily: "DM Sans, sans-serif" }}
+            >
+              {t.landing.nav.login}
+            </Link>
+            {/* CTA: ancho fijo sm:w-[9rem] en desktop, w-auto en mobile (texto corto) */}
+            <Link
+              to="/register"
+              className="nav-btn-primary-animated flex-shrink-0 inline-flex w-[5rem] justify-center sm:w-[9rem] items-center px-3 py-2 rounded-lg text-xs sm:text-sm font-medium text-white transition-colors whitespace-nowrap overflow-hidden"
+              style={{ background: "rgb(108, 99, 255)", fontFamily: "DM Sans, sans-serif", boxShadow: "0 0 25px rgba(108, 99, 255, 0.35)" }}
+            >
+              <span className="hidden sm:inline">{t.landing.nav.cta}</span>
+              <span className="sm:hidden">{t.landing.nav.ctaRes}</span>
+            </Link>
+          </div>
         </div>
       </nav>
 
@@ -443,7 +576,7 @@ export function Hero() {
               </p>
               
               <div className="flex flex-col items-center md:items-start gap-5 mb-10" style={fadeInStyle(360)}>
-                <Link to="/register" className="inline-flex items-center px-8 py-4 rounded-xl font-semibold text-white transition-all hover:scale-[1.02] active:scale-[0.98]" style={{ background: "linear-gradient(rgb(108, 99, 255) 0%, rgb(108, 99, 255) 100%)", boxShadow: "0 0 40px rgba(108,99,255,0.4), 0 10px 20px rgba(0,0,0,0.3)" }}>{t.landing.hero.cta}</Link>
+                <Link to="/register" className="hero-cta-btn inline-flex items-center px-8 py-4 rounded-xl font-semibold text-white active:scale-[0.98]">{t.landing.hero.cta}</Link>
                 <div className="flex flex-col items-center md:items-start gap-3">
                   <span className="text-xs" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "DM Sans, sans-serif" }}>{t.landing.hero.ctaSub}</span>
                   
@@ -545,15 +678,26 @@ function ProblemSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {problems.map((p, i) => (
-            <Reveal key={p.title} delay={i * 80}>
-              <div 
-                className="problem-card-glow-border transition-all duration-500"
+            <Reveal key={p.title} delay={i * 80} className="h-full">
+              <div
+                className="problem-card-glow-border transition-all duration-500 h-full"
                 style={{
-                  border: "1px solid rgba(108, 99, 255, 0.2)",
+                  border: i === 1
+                    ? "1px solid rgba(108, 99, 255, 0.6)"
+                    : "1px solid rgba(255, 255, 255, 0.06)",
                   borderRadius: "1.25rem",
-                  background: "rgba(255, 255, 255, 0.02)",
+                  background: i === 1
+                    ? "rgba(108, 99, 255, 0.08)"
+                    : "rgba(255, 255, 255, 0.02)",
                   backdropFilter: "blur(10px)",
-                  padding: "2px" 
+                  padding: "2px",
+                  transform: i === 1 ? "scale(1.04)" : "none",
+                  transformOrigin: "center",
+                  position: "relative",
+                  zIndex: i === 1 ? 1 : 0,
+                  boxShadow: i === 1
+                    ? "0 0 0 1px rgba(108, 99, 255, 0.2), 0 0 25px rgba(108, 99, 255, 0.18), 0 0 50px rgba(108, 99, 255, 0.08)"
+                    : "none",
                 }}
               >
                 <ProblemCard {...p} />
@@ -632,7 +776,7 @@ function HowItWorksSection() {
   return (
     <section 
       className="relative py-32 px-6 overflow-hidden" 
-      style={{ background: "#08080C" }}
+      style={{ background: "#1a1a2e" }}
     >
       <div className="absolute top-0 left-0 w-full h-px" style={{ background: "linear-gradient(to right, transparent, rgba(108, 99, 255, 0.3), transparent)" }} />
 
@@ -700,10 +844,10 @@ function HowItWorksSection() {
               <Reveal key={s.num} delay={i * 100}>
                 <div className="flex flex-col items-center group cursor-pointer">
                   {/* Círculo del Número */}
-                  <div 
-                    className="w-20 h-20 rounded-2xl flex items-center justify-center mb-10 relative transition-all duration-500 ease-out border" 
+                  <div
+                    className="w-20 h-20 rounded-2xl flex items-center justify-center mb-10 relative transition-all duration-500 ease-out border"
                     style={{ 
-                      background: "rgba(8, 8, 12, 1)", // Fondo sólido para tapar la línea detrás
+                      background: "#1a1a2e", // Fondo sólido para tapar la línea detrás
                       borderColor: "rgba(108, 99, 255, 0.4)", 
                       boxShadow: "inset 0 0 15px rgba(108, 99, 255, 0.1)" 
                     }}
@@ -828,8 +972,8 @@ function FeatureCard({ icon, title, desc }) {
         <div
           className="w-9 h-9 rounded-xl flex items-center justify-center mb-4"
           style={{
-            background: "rgba(108,99,255,0.12)",
-            color: "var(--accent)",
+            background: "rgba(108,99,255,0.15)",
+            color: "rgb(108,99,255)",
           }}
         >
           {icon}
@@ -855,13 +999,12 @@ function FeatureCard({ icon, title, desc }) {
       {/* Aplicamos exactamente el mismo comportamiento de color que tenías en el state */}
       <style>{`
         .feature-card {
-          background: var(--surface2);
-          border-color: var(--border);
+          background: rgba(108,99,255,0.06);
+          border-color: rgba(108,99,255,0.2);
         }
-        /* El hover de CSS nunca falla, por muy rápido que muevas el ratón */
         .feature-card:hover {
-          background: rgba(108,99,255,0.04);
-          border-color: var(--accent);
+          background: rgba(108,99,255,0.1);
+          border-color: rgba(108,99,255,0.4);
         }
       `}</style>
     </>
@@ -876,17 +1019,19 @@ function AutopilotCard() {
       className="rounded-2xl p-8 border relative overflow-hidden"
       style={{
         background:
-          "linear-gradient(135deg, rgba(108,99,255,0.08) 0%, rgba(167,139,250,0.05) 100%)",
-        borderColor: "var(--accent)",
-        boxShadow: "0 0 40px rgba(108,99,255,0.08)",
+          "linear-gradient(135deg, rgba(108,99,255,0.22) 0%, rgba(108,99,255,0.12) 40%, rgba(80,60,200,0.08) 70%, rgba(108,99,255,0.04) 100%)",
+        border: "1px solid rgba(108,99,255,0.55)",
+        borderTop: "1px solid rgba(108,99,255,0.7)",
+        boxShadow:
+          "0 0 25px rgba(108,99,255,0.18), 0 0 60px rgba(108,99,255,0.08), inset 0 0 50px rgba(108,99,255,0.07)",
       }}
     >
       <div className="flex items-center gap-3 mb-5">
         <span
           className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold tracking-widest"
           style={{
-            background: "rgba(108,99,255,0.18)",
-            color: "var(--accent)",
+            background: "rgb(108,99,255)",
+            color: "#ffffff",
             fontFamily: "DM Sans, sans-serif",
           }}
         >
@@ -914,16 +1059,26 @@ function AutopilotCard() {
         {ap.title}
       </h3>
 
-      <p
-        className="leading-relaxed max-w-3xl"
-        style={{
-          fontFamily: "DM Sans, sans-serif",
-          color: "var(--muted)",
-          fontSize: "0.95rem",
-        }}
-      >
-        {ap.desc}{" "}
-        <strong style={{ color: "var(--text)" }}>{ap.descStrong}</strong>
+      <ul style={{ listStyle: "none", padding: 0, margin: "0 0 20px 0", display: "flex", flexDirection: "column", gap: "10px" }}>
+        {ap.desc.split(/\. (?=[A-Z])/).map((sentence, i) => (
+          <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px", color: "rgba(255, 255, 255, 0.72)", fontSize: "0.92rem", fontFamily: "DM Sans, sans-serif", lineHeight: "1.6" }}>
+            <span style={{ color: "rgb(108, 99, 255)", fontWeight: 700, marginTop: "2px", flexShrink: 0 }}>→</span>
+            {sentence.endsWith(".") ? sentence : sentence + "."}
+          </li>
+        ))}
+      </ul>
+      <p style={{
+        color: "rgb(52, 211, 153)",
+        fontWeight: 800,
+        fontSize: "1.05rem",
+        lineHeight: "1.5",
+        fontFamily: "DM Sans, sans-serif",
+        marginTop: "16px",
+        paddingLeft: "14px",
+        borderLeft: "3px solid rgb(52, 211, 153)",
+        letterSpacing: "0.01em",
+      }}>
+        {ap.descStrong}
       </p>
 
       <div
@@ -1113,8 +1268,8 @@ function PricingSection() {
             <div
               className="rounded-2xl p-8 border h-full flex flex-col"
               style={{
-                background: "var(--surface2)",
-                borderColor: "var(--border)",
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.08)",
               }}
             >
               <div
@@ -1176,12 +1331,13 @@ function PricingSection() {
           {/* Pro card */}
           <Reveal delay={100}>
             <div
-              className="rounded-2xl p-8 border h-full flex flex-col relative overflow-hidden"
+              className="pro-card rounded-2xl p-8 h-full flex flex-col relative overflow-hidden"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(108,99,255,0.1) 0%, rgba(167,139,250,0.05) 100%)",
-                borderColor: "var(--accent)",
-                boxShadow: "0 0 30px rgba(108,99,255,0.1)",
+                  "linear-gradient(135deg, rgba(108,99,255,0.18) 0%, rgba(108,99,255,0.08) 50%, rgba(108,99,255,0.04) 100%)",
+                border: "1px solid rgba(108,99,255,0.8)",
+                boxShadow:
+                  "0 0 0 1px rgba(108,99,255,0.3), 0 0 20px rgba(108,99,255,0.25), 0 0 60px rgba(108,99,255,0.12), inset 0 0 40px rgba(108,99,255,0.06)",
               }}
             >
               <div className="flex items-center gap-2 mb-2">
@@ -1197,8 +1353,8 @@ function PricingSection() {
                 <span
                   className="px-2 py-0.5 rounded-full text-xs font-semibold"
                   style={{
-                    background: "rgba(108,99,255,0.2)",
-                    color: "var(--accent)",
+                    background: "rgb(108,99,255)",
+                    color: "#ffffff",
                     fontFamily: "DM Sans, sans-serif",
                   }}
                 >
@@ -1224,7 +1380,7 @@ function PricingSection() {
               <ul className="flex flex-col gap-3 mb-8 flex-1">
                 {pro.features.map((f) => (
                   <li key={f} className="flex items-start gap-2">
-                    <CheckIcon color="var(--accent)" />
+                    <CheckIcon color="rgb(108,99,255)" />
                     <span
                       className="text-sm"
                       style={{
@@ -1240,11 +1396,8 @@ function PricingSection() {
 
               <Link
                 to="/register"
-                className="pricing-btn-pro w-full text-center py-3 rounded-xl text-sm font-semibold text-white transition-colors duration-150 block"
-                style={{
-                  background: "var(--accent)",
-                  fontFamily: "DM Sans, sans-serif",
-                }}
+                className="btn-shimmer"
+                style={{ fontFamily: "DM Sans, sans-serif" }}
               >
                 {pro.cta}
               </Link>
@@ -1263,10 +1416,17 @@ function PricingSection() {
 
       <style>{`
         .pricing-btn-free:hover {
-          border-color: var(--accent) !important;
+          border-color: rgba(108,99,255,0.5) !important;
         }
-        .pricing-btn-pro:hover {
-          background: var(--accent2) !important;
+        .pro-card {
+          transition: box-shadow 0.3s ease;
+        }
+        .pro-card:hover {
+          box-shadow:
+            0 0 0 1px rgba(108,99,255,0.5),
+            0 0 30px rgba(108,99,255,0.35),
+            0 0 80px rgba(108,99,255,0.18),
+            inset 0 0 40px rgba(108,99,255,0.08) !important;
         }
       `}</style>
     </section>
@@ -1382,8 +1542,13 @@ function FinalCTASection() {
 // ─── Section 8 — Footer ───────────────────────────────────────────────────────
 function Footer() {
   const t = useT();
-  const langs = ["ES", "EN", "CA"];
-  const [activeLang, setActiveLang] = useState("ES");
+  const langs = ["es", "en", "ca"];
+
+  // Leemos el idioma directamente del store global (SSOT) — no estado local aislado
+  const activeLang = useSyncExternalStore(
+    landingLanguageStore.subscribe,
+    landingLanguageStore.getLanguage
+  );
 
   return (
     <footer
@@ -1432,13 +1597,14 @@ function Footer() {
               {langs.map((lang) => (
                 <button
                   key={lang}
-                  onClick={() => setActiveLang(lang)}
+                  onClick={() => landingLanguageStore.setLanguage(lang)}
+                  aria-label={lang === "es" ? "Cambiar a Español" : lang === "en" ? "Switch to English" : "Canviar a Català"}
                   className={`lang-btn px-3 py-1 rounded-md text-xs font-semibold transition-colors duration-150 ${
                     activeLang === lang ? "active" : ""
                   }`}
                   style={{ fontFamily: "DM Sans, sans-serif" }}
                 >
-                  {lang}
+                  {lang.toUpperCase()}
                 </button>
               ))}
             </div>
