@@ -147,7 +147,7 @@ export default {
   landing: {
     nav: {
       login: "Inicia sessió",
-      cta: "Comença gratuïtament",
+      cta: "Comença ara",
       ctaRes: "Comença",
     },
     hero: {
@@ -284,6 +284,125 @@ export default {
       terms: "Termes",
       contact: "Contacte",
       copyright: "© 2026 REVIXY. Tots els drets reservats.",
+    },
+  },
+  legal: {
+    privacy: {
+      title: "Política de Privacitat",
+      lastUpdated: "Darrera actualització: 31 de març de 2026",
+      sections: {
+        dataCollection: {
+          heading: "1. Qui som i quines dades recopilem",
+          body: "REVIXY és una plataforma SaaS B2B operada per REVIXY SL, societat constituïda d'acord amb la legislació espanyola amb domicili social a Espanya. Actuem com a responsables del tractament de les dades personals recopilades a través d'aquesta plataforma, d'acord amb el Reglament (UE) 2016/679 (RGPD) i la Llei Orgànica 3/2018 de Protecció de Dades Personals i garantia dels drets digitals (LOPDGDD).\n\nRecopilem les categories de dades següents: (a) Dades de compte — nom, adreça de correu electrònic, hash de contrasenya i preferència d'idioma facilitades en el registre; (b) Dades d'ús — registres de sessió, interaccions amb funcionalitats i informes d'errors generats durant l'ús de la plataforma; (c) Dades de la botiga Shopify — ingressos per comandes, costos de producte, despeses d'enviament, taxes de devolució i comissions de passarel·la de pagament obtinguts a través de l'API de Shopify amb la teva autorització explícita; (d) Dades de Meta Ads — despesa en campanyes, impressions, conversions i dades d'atribució obtingudes a través de l'API de Màrqueting de Meta amb la teva autorització explícita.\n\nLes bases jurídiques del tractament són: execució d'un contracte (Art. 6(1)(b) RGPD) per a les dades de compte i prestació del servei; interès legítim (Art. 6(1)(f) RGPD) per a l'anàlisi d'ús destinada a millorar la seguretat i funcionalitat de la plataforma; i el teu consentiment explícit (Art. 6(1)(a) RGPD) per a la connexió i tractament de les dades de Shopify i Meta Ads.",
+        },
+        shopifyMeta: {
+          heading: "2. Integració amb Shopify i Meta Ads",
+          body: "En connectar la teva botiga Shopify o el teu compte de Meta Ads, autoritzes REVIXY a obtenir dades d'aquestes plataformes a través de les seves APIs oficials mitjançant OAuth 2.0. Sol·licitem els permisos mínims necessaris: accés de només lectura a comandes i productes a Shopify, i accés de només lectura al rendiment de campanyes a Meta Ads.\n\nAquestes dades s'emmagatzemen de forma xifrada a la nostra infraestructura ubicada dins de l'Espai Econòmic Europeu. S'utilitzen exclusivament per calcular el teu Benefici de Contribució, HealthScore i insights generats per IA. No compartim aquestes dades amb tercers amb finalitats publicitàries, de creació de perfils ni de revenda. Si revoquessis l'autorització d'API a Shopify o Meta, cessarem tota obtenció futura de dades i eliminarem les dades corresponents en un termini de 30 dies a partir de la teva sol·licitud per escrit.\n\nEn tot moment continuaràs sent el propietari de les teves dades empresarials brutes. REVIXY actua com a encarregat del tractament d'aquestes dades únicament amb la finalitat de prestar el servei contractat.",
+        },
+        aiProcessing: {
+          heading: "3. Tractament per IA i generació d'insights",
+          body: "REVIXY utilitza models d'aprenentatge automàtic i algoritmes estadístics per analitzar les dades empresarials connectades i generar insights, alertes i recomanacions de decisions. Aquests insights es deriven exclusivament de les teves pròpies dades: no entrenem models compartits amb les teves dades ni les fem servir en benefici d'altres usuaris.\n\nEls insights generats per IA tenen caràcter informatiu. Representen recomanacions probabilístiques basades en patrons de dades històriques. No constitueixen assessorament financer, jurídic ni empresarial. Ets l'únic responsable de qualsevol decisió que prenguis basant-te en aquests insights.\n\nPodem utilitzar resums estadístics anonimitzats, agregats i no reversibles derivats dels patrons d'ús global de la plataforma per millorar la precisió i rellevància dels nostres models. Aquestes dades agregades no es poden utilitzar per identificar cap usuari o botiga concrets.",
+        },
+        retention: {
+          heading: "4. Conservació de dades",
+          body: "Conservem les teves dades de compte mentre el teu compte estigui actiu i durant un període de 3 anys després de la seva eliminació, per complir amb les obligacions previstes a la legislació mercantil i fiscal espanyola.\n\nLes dades operatives de Shopify i Meta Ads es conserven en una finestra activa de 14 dies per a l'anàlisi en temps real, i s'arxiven fins a 2 anys per a l'anàlisi de tendències històriques als comptes del pla Pro. Les dades arxivades dels usuaris del pla gratuït s'eliminen després de 90 dies d'inactivitat o en eliminar el compte, el que passi primer.\n\nEls registres d'ús i informes d'errors es conserven durant 12 mesos amb finalitats de seguretat i depuració, i posteriorment s'eliminen de forma permanent. Pots sol·licitar l'eliminació anticipada de les teves dades personals en qualsevol moment, amb subjecció a les nostres obligacions legals de conservació.",
+        },
+        userRights: {
+          heading: "5. Els teus drets d'acord amb el RGPD",
+          body: "Com a interessat a la Unió Europea, tens els drets següents respecte a les teves dades personals:",
+          items: [
+            "Dret d'accés (Art. 15 RGPD): pots sol·licitar una còpia de totes les dades personals que posseïm sobre tu.",
+            "Dret de rectificació (Art. 16 RGPD): pots sol·licitar la correcció de qualsevol dada personal inexacta o incompleta.",
+            "Dret de supressió (Art. 17 RGPD): pots sol·licitar l'eliminació de les teves dades personals quan ja no siguin necessàries per als fins per als quals es van recopilar, amb subjecció a les obligacions legals de conservació.",
+            "Dret a la portabilitat (Art. 20 RGPD): pots sol·licitar les teves dades en un format estructurat i llegible per màquina (JSON o CSV) per al seu trasllat a un altre servei.",
+            "Dret a la limitació del tractament (Art. 18 RGPD): pots sol·licitar que limitem el tractament de les teves dades en determinades circumstàncies.",
+            "Dret d'oposició (Art. 21 RGPD): pots oposar-te en qualsevol moment al tractament basat en interès legítim.",
+            "Dret a retirar el consentiment: quan el tractament es basi en el consentiment, pots retirar-lo en qualsevol moment sense que això afecti la licitud del tractament previ.",
+            "Dret a presentar una reclamació: tens dret a presentar una reclamació davant l'Agència Espanyola de Protecció de Dades (AEPD) a www.aepd.es o davant l'autoritat de control del teu Estat membre de la UE.",
+          ],
+        },
+        cookies: {
+          heading: "6. Cookies i serveis de tercers",
+          body: "REVIXY utilitza cookies estrictament necessàries per mantenir la teva sessió autenticada i emmagatzemar la teva preferència d'idioma. No fem servir cookies publicitàries ni píxels de seguiment de tercers.\n\nFem servir els proveïdors d'infraestructura de tercers següents, tots ubicats dins de l'EEE o coberts per Clàusules Contractuals Tipus: serveis d'allotjament al núvol i bases de dades per a l'emmagatzematge i processament de dades; serveis d'autenticació per a l'inici de sessió segur, inclòs Google OAuth 2.0 com a mètode d'accés opcional; i serveis de monitoratge d'errors per detectar i diagnosticar problemes a la plataforma.\n\nPots gestionar les preferències de cookies a través de la configuració del teu navegador. Desactivar les cookies de sessió t'impedirà iniciar sessió a la plataforma.",
+        },
+        contact: {
+          heading: "7. Contacte i sol·licituds de dades",
+          body: "Per a qualsevol sol·licitud relacionada amb la privacitat, incloent-hi l'exercici de drets RGPD, eliminació de dades o consultes generals, contacta'ns a:\n\nCorreu electrònic: privacy@revixy.com\nAdreça postal: REVIXY SL, [TODO: domicili social], Espanya\n\nAcusarem recepció de la teva sol·licitud en un termini de 72 hores i respondrem de manera completa en un termini de 30 dies naturals, tal com exigeix l'Art. 12 del RGPD.",
+        },
+      },
+    },
+    terms: {
+      title: "Termes de Servei",
+      lastUpdated: "Darrera actualització: 31 de març de 2026",
+      tocTitle: "Índex",
+      toc: [
+        "Acceptació dels Termes",
+        "Descripció del Servei",
+        "Propietat Intel·lectual",
+        "Limitació de Responsabilitat",
+        "Usos Prohibits",
+        "Subscripció, Facturació i Cancel·lació",
+        "Modificacions del Servei o els Termes",
+        "Llei Aplicable i Jurisdicció",
+        "Contacte",
+      ],
+      sections: {
+        acceptance: {
+          heading: "1. Acceptació dels termes",
+          body: "En crear un compte o utilitzar qualsevol part de la plataforma REVIXY, acceptes quedar vinculat per aquests Termes de Servei («Termes»). Si no estàs d'acord amb la totalitat d'aquests Termes, no has d'utilitzar la plataforma.\n\nHas de tenir almenys 18 anys d'edat i disposar de capacitat jurídica per celebrar acords vinculants en nom de l'entitat empresarial que representes. L'ús de la plataforma està condicionat al compliment d'aquests Termes i de tota la normativa aplicable.",
+        },
+        service: {
+          heading: "2. Descripció del servei",
+          body: "REVIXY és una plataforma d'intel·ligència d'ingressos impulsada per IA per a empreses de comerç electrònic directe al consumidor (DTC). La plataforma es connecta a la teva botiga Shopify i al teu compte de Meta Ads a través d'APIs oficials per calcular el teu Benefici de Contribució real, generar un HealthScore diari, detectar anomalies financeres i proporcionar insights empresarials i simulacions de decisions generats per IA.\n\nEl servei es presta tal com és (as-is) en modalitat de subscripció o freemium. La disponibilitat de funcionalitats depèn del teu nivell de subscripció. Ens reservem el dret de modificar, limitar o discontinuar funcionalitats en qualsevol moment, amb avís previ raonable als subscriptors actius.\n\nREVIXY no és un servei d'assessorament financer, comptable ni d'inversió regulat d'acord amb cap llei financera europea aplicable.",
+        },
+        ip: {
+          heading: "3. Propietat intel·lectual",
+          body: "REVIXY i tots els seus components —incloent-hi, entre d'altres, els seus algoritmes, models d'IA, arquitectura de programari, interfície d'usuari, identitat de marca i documentació— són propietat intel·lectual exclusiva de REVIXY SL, protegida per la legislació espanyola i comunitària sobre propietat intel·lectual.\n\nEls insights, alertes, recomanacions i informes generats per IA produïts per la plataforma són obres derivades del sistema REVIXY i romanen com a propietat intel·lectual de REVIXY SL. Reps una llicència limitada, no exclusiva i intransferible per utilitzar aquests resultats únicament per als teus propis fins empresarials interns mentre el teu compte estigui actiu.\n\nConserves la plena propietat de les teves dades empresarials brutes: l'historial de comandes de Shopify, el catàleg de productes i les dades de campanyes de Meta Ads. Atorgues a REVIXY una llicència limitada per tractar aquestes dades amb l'únic propòsit de prestar el servei contractat. Aquesta llicència finalitza amb l'eliminació del compte.",
+        },
+        liability: {
+          heading: "4. Limitació de responsabilitat",
+          body: "LA PLATAFORMA PROPORCIONA ÚNICAMENT INSIGHTS INFORMATIUS I ANALÍTICS. TOTES LES RECOMANACIONS GENERADES PER IA, CÀLCULS DE BENEFICIS, ESTIMACIONS DE ROAS, PUNTUACIONS DE SALUT I SIMULACIONS DE DECISIONS SÓN DE NATURALESA PROBABILÍSTICA I ES BASEN EN DADES HISTÒRIQUES. NO CONSTITUEIXEN ASSESSORAMENT FINANCER, COMPTABLE, JURÍDIC NI CAP ALTRE TIPUS DE SERVEI PROFESSIONAL D'ASSESSORAMENT.\n\nETS L'ÚNIC I PLE RESPONSABLE DE QUALSEVOL DECISIÓ EMPRESARIAL, FINANCERA O OPERATIVA QUE PRENGUIS, AMB INDEPENDÈNCIA DE SI AQUESTA DECISIÓ VA ESTAR INFORMADA O NO PELS RESULTATS D'AQUESTA PLATAFORMA. REVIXY SL NO SERÀ RESPONSABLE DE CAP DANY DIRECTE, INDIRECTE, ACCIDENTAL, ESPECIAL, CONSEQÜENT O PUNITIU DERIVAT DEL TEU ÚS O DEPENDÈNCIA DELS RESULTATS DE LA PLATAFORMA, INCLOENT-HI, ENTRE D'ALTRES, LA PÈRDUA D'INGRESSOS, PÈRDUA DE BENEFICIS, INTERRUPCIÓ DEL NEGOCI O PÈRDUA DE DADES.\n\nEN LA MÀXIMA MESURA PERMESA PER LA LLEI APLICABLE, LA RESPONSABILITAT TOTAL ACUMULADA DE REVIXY SL ENVERS TU PER QUALSEVOL RECLAMACIÓ DERIVADA O RELACIONADA AMB AQUESTS TERMES O EL TEU ÚS DEL SERVEI NO SUPERARÀ L'IMPORT TOTAL QUE HAGIS PAGAT A REVIXY ELS 12 MESOS ANTERIORS A LA RECLAMACIÓ.",
+          notice: "⚠️ Avís Important",
+        },
+        prohibited: {
+          heading: "5. Usos prohibits",
+          body: "Acceptes no utilitzar la plataforma per a cap dels fins següents:",
+          items: [
+            "Realitzar enginyeria inversa, descompilar o desmuntar qualsevol part del programari o els algoritmes de la plataforma.",
+            "Accedir a la plataforma mitjançant mitjans automatitzats (bots, scrapers o rastrejadors) sense consentiment previ per escrit.",
+            "Compartir les credencials del teu compte amb tercers o revendre l'accés a la plataforma.",
+            "Utilitzar la plataforma per tractar dades pertanyents a un tercer sense la seva autorització explícita.",
+            "Intentar eludir, desactivar o interferir amb qualsevol característica de seguretat o control d'accés de la plataforma.",
+            "Utilitzar els resultats generats per IA per tergivers ar el rendiment financer de la teva empresa davant inversors, entitats financeres o organismes reguladors.",
+            "Carregar o transmetre codi maliciós, virus o qualsevol material que pugui danyar la plataforma o altres usuaris.",
+          ],
+        },
+        billing: {
+          heading: "6. Subscripció, facturació i cancel·lació",
+          body: "REVIXY ofereix un nivell gratuït amb funcionalitats limitades i una subscripció Pro amb accés complet. Les tarifes de subscripció, els cicles de facturació i les funcionalitats incloses es descriuen a la pàgina de preus i poden actualitzar-se amb un preavís de 30 dies.\n\nLes subscripcions Pro es facturen per avançat de forma mensual o anual. Totes les tarifes no són reemborsables, excepte quan ho exigeixi la legislació de protecció del consumidor aplicable al teu Estat membre de la UE.\n\nPots cancel·lar la teva subscripció en qualsevol moment des de la configuració del teu compte. La cancel·lació tindrà efecte al final del teu període de facturació en curs. Les teves dades romandran accessibles en mode de només lectura durant 30 dies després de la cancel·lació, i posteriorment seran eliminades de forma permanent d'acord amb la nostra política de conservació de dades.",
+        },
+        modifications: {
+          heading: "7. Modificacions del servei o dels termes",
+          body: "Ens reservem el dret de modificar aquests Termes en qualsevol moment. Si realitzem canvis substancials, t'ho comunicarem per correu electrònic i mitjançant un avís destacat a la plataforma almenys 15 dies abans que els canvis entrin en vigor. L'ús continuat de la plataforma després de la data d'entrada en vigor constitueix l'acceptació dels Termes revisats.\n\nTambé podem modificar, suspendre o discontinuar qualsevol part del servei en qualsevol moment. Per als subscriptors de pagament, proporcionarem un preavís d'almenys 30 dies abans de discontinuar una funcionalitat essencial per al servei contractat.",
+        },
+        governingLaw: {
+          heading: "8. Llei Aplicable i Jurisdicció",
+          body: "Aquests Termes es regeixen i interpreten d'acord amb les lleis d'Espanya, sense considerar les seves disposicions sobre conflictes de lleis. La normativa de protecció del consumidor de la UE s'aplica quan ets un consumidor resident a la Unió Europea.\n\nQualsevol controvèrsia derivada de o relacionada amb aquests Termes se sotmetrà en primer lloc a una negociació de bona fe entre les parts. Si no es resol en un termini de 30 dies, les controvèrsies se sotmetran a la jurisdicció exclusiva dels tribunals d'Espanya, tret que la legislació imperativa de protecció del consumidor del teu Estat membre de la UE disposi una altra cosa.\n\nPer als consumidors de la UE, la plataforma de resolució de litigis en línia de la Comissió Europea està disponible a https://ec.europa.eu/consumers/odr.",
+        },
+        contact: {
+          heading: "9. Contacte",
+          body: "Per a qualsevol consulta o notificació relativa a aquests Termes, contacta'ns a:\n\nCorreu electrònic: legal@revixy.com\nAdreça postal: REVIXY SL, [TODO: domicili social], Espanya\n\nRespondrem a totes les consultes legals escrites en un termini de 10 dies hàbils.",
+        },
+      },
+    },
+    // TODO: wire to registration form checkbox
+    acceptanceCheckbox: {
+      prefix: "Accepto els",
+      termsLink: "Termes i Condicions",
+      middle: "i la",
+      privacyLink: "Política de Privacitat",
+      suffix: ", i entenc que els insights generats per IA són orientatius i",
+      bold: "no constitueixen assessorament financer.",
     },
   },
   common: {

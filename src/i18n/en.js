@@ -146,7 +146,7 @@ export default {
   landing: {
     nav: {
       login: "Sign in",
-      cta: "Start for free",
+      cta: "Start now",
       ctaRes: "Start",
     },
     hero: {
@@ -279,6 +279,125 @@ export default {
       terms: "Terms",
       contact: "Contact",
       copyright: "© 2026 REVIXY. All rights reserved.",
+    },
+  },
+  legal: {
+    privacy: {
+      title: "Privacy Policy",
+      lastUpdated: "Last updated: March 31, 2026",
+      sections: {
+        dataCollection: {
+          heading: "1. Who We Are and What Data We Collect",
+          body: "REVIXY is a B2B SaaS platform operated by REVIXY SL, a company incorporated under Spanish law with registered office in Spain. We act as data controller for personal data collected through this platform, in compliance with Regulation (EU) 2016/679 (GDPR) and Spanish Organic Law 3/2018 on the Protection of Personal Data (LOPDGDD).\n\nWe collect the following categories of data: (a) Account data — name, email address, password hash, and language preference provided at registration; (b) Usage data — session logs, feature interactions, and error reports generated while you use the platform; (c) Shopify store data — order revenue, product costs, shipping fees, return rates, and gateway fees retrieved via the Shopify API on your explicit authorization; (d) Meta Ads data — campaign spend, impressions, conversions, and attribution data retrieved via the Meta Marketing API on your explicit authorization.\n\nThe legal bases for processing are: performance of a contract (Art. 6(1)(b) GDPR) for account and service delivery data; legitimate interest (Art. 6(1)(f) GDPR) for usage analytics to improve platform security and functionality; and your explicit consent (Art. 6(1)(a) GDPR) for the connection and processing of Shopify and Meta Ads data.",
+        },
+        shopifyMeta: {
+          heading: "2. Shopify and Meta Ads Integration",
+          body: "When you connect your Shopify store or Meta Ads account, you authorize REVIXY to retrieve data from those platforms via their official APIs using OAuth 2.0. We request the minimum necessary scopes: read-only access to orders and products for Shopify, and read-only access to campaign performance for Meta Ads.\n\nThis data is stored in encrypted form in our infrastructure located within the European Economic Area. It is used exclusively to calculate your Contribution Profit, HealthScore, and AI-generated insights. We do not share this data with third parties for advertising, profiling, or resale purposes. If you revoke API authorization in Shopify or Meta, we will cease all future data retrieval and delete the corresponding data within 30 days upon your written request.\n\nYou remain the owner of your raw business data at all times. REVIXY acts as a processor of that data solely for the purpose of delivering the service you have contracted.",
+        },
+        aiProcessing: {
+          heading: "3. AI Processing and Insight Generation",
+          body: "REVIXY uses machine learning models and statistical algorithms to analyze your connected business data and generate insights, alerts, and decision recommendations. These insights are derived exclusively from your own data — we do not train shared models on your data, nor do we use your data to benefit other users.\n\nAI-generated insights are informational in nature. They represent probabilistic recommendations based on historical data patterns. They do not constitute financial, legal, or business advice. You are solely responsible for any decisions you make based on these insights.\n\nWe may use anonymized, aggregated, and non-reversible statistical summaries derived from platform-wide usage patterns to improve the accuracy and relevance of our models. This aggregated data cannot be used to identify any individual user or store.",
+        },
+        retention: {
+          heading: "4. Data Retention",
+          body: "We retain your account data for as long as your account is active and for a period of 3 years following account deletion, to comply with Spanish commercial and tax law obligations.\n\nShopify and Meta Ads operational data is retained for a rolling 14-day active window for real-time analysis, and archived for up to 2 years for historical trend analysis on Pro plan accounts. Free plan users' archived data is deleted after 90 days of inactivity or account deletion, whichever comes first.\n\nUsage logs and error reports are retained for 12 months for security and debugging purposes, then permanently deleted. You may request early deletion of your personal data at any time, subject to our legal retention obligations.",
+        },
+        userRights: {
+          heading: "5. Your Rights Under GDPR",
+          body: "As a data subject in the European Union, you have the following rights regarding your personal data:",
+          items: [
+            "Right of access (Art. 15 GDPR): You may request a copy of all personal data we hold about you.",
+            "Right to rectification (Art. 16 GDPR): You may request correction of any inaccurate or incomplete personal data.",
+            "Right to erasure (Art. 17 GDPR): You may request deletion of your personal data where it is no longer necessary for the purposes for which it was collected, subject to legal retention obligations.",
+            "Right to data portability (Art. 20 GDPR): You may request your data in a structured, machine-readable format (JSON or CSV) for transfer to another service.",
+            "Right to restriction of processing (Art. 18 GDPR): You may request that we restrict processing of your data in certain circumstances.",
+            "Right to object (Art. 21 GDPR): You may object to processing based on legitimate interest at any time.",
+            "Right to withdraw consent: Where processing is based on consent, you may withdraw it at any time without affecting the lawfulness of prior processing.",
+            "Right to lodge a complaint: You have the right to lodge a complaint with the Spanish Data Protection Authority (AEPD) at www.aepd.es or with the supervisory authority in your EU member state.",
+          ],
+        },
+        cookies: {
+          heading: "6. Cookies and Third-Party Services",
+          body: "REVIXY uses strictly necessary cookies to maintain your authenticated session and store your language preference. We do not use advertising cookies or third-party tracking pixels.\n\nWe use the following third-party infrastructure providers, all located within the EEA or covered by Standard Contractual Clauses: cloud hosting and database services for data storage and processing; authentication services for secure login, including Google OAuth 2.0 as an optional sign-in method; and error monitoring services to detect and diagnose platform issues.\n\nYou can manage cookie preferences through your browser settings. Disabling session cookies will prevent you from logging in to the platform.",
+        },
+        contact: {
+          heading: "7. Contact and Data Requests",
+          body: "For any privacy-related request, including exercise of GDPR rights, data deletion, or general inquiries, contact us at:\n\nEmail: privacy@revixy.com\nPostal address: REVIXY SL, [TODO: registered address], Spain\n\nWe will acknowledge your request within 72 hours and respond in full within 30 calendar days as required by GDPR Art. 12.",
+        },
+      },
+    },
+    terms: {
+      title: "Terms of Service",
+      lastUpdated: "Last updated: March 31, 2026",
+      tocTitle: "Table of Contents",
+      toc: [
+        "Acceptance of Terms",
+        "Description of the Service",
+        "Intellectual Property",
+        "Limitation of Liability",
+        "Prohibited Uses",
+        "Subscription, Billing and Cancellation",
+        "Modifications to the Service or Terms",
+        "Governing Law & Jurisdiction",
+        "Contact",
+      ],
+      sections: {
+        acceptance: {
+          heading: "1. Acceptance of Terms",
+          body: "By creating an account or using any part of the REVIXY platform, you agree to be bound by these Terms of Service (\"Terms\"). If you do not agree to these Terms in full, you must not use the platform.\n\nYou must be at least 18 years old and have the legal authority to enter into binding agreements on behalf of the business entity you represent. Use of the platform is conditioned on your compliance with these Terms and all applicable laws and regulations.",
+        },
+        service: {
+          heading: "2. Description of the Service",
+          body: "REVIXY is an AI-powered revenue intelligence platform for direct-to-consumer (DTC) e-commerce businesses. The platform connects to your Shopify store and Meta Ads account via official APIs to calculate your real Contribution Profit, generate a daily HealthScore, detect financial anomalies, and provide AI-generated business insights and decision simulations.\n\nThe service is provided as-is on a subscription or freemium basis. Feature availability depends on your subscription tier. We reserve the right to modify, limit, or discontinue features at any time, subject to reasonable notice to active subscribers.\n\nREVIXY is not a financial advisory service, an accounting service, or a regulated investment service under any applicable EU financial law.",
+        },
+        ip: {
+          heading: "3. Intellectual Property",
+          body: "REVIXY and all its components — including but not limited to its algorithms, AI models, software architecture, user interface, brand identity, and documentation — are the exclusive intellectual property of REVIXY SL, protected under Spanish and EU intellectual property law.\n\nAI-generated insights, alerts, recommendations, and reports produced by the platform are derived works of the REVIXY system and remain the intellectual property of REVIXY SL. You receive a limited, non-exclusive, non-transferable license to use these outputs solely for your own internal business purposes while your account is active.\n\nYou retain full ownership of your raw business data: your Shopify order history, product catalog, and Meta Ads campaign data. You grant REVIXY a limited license to process that data for the sole purpose of delivering the contracted service. This license terminates upon account deletion.",
+        },
+        liability: {
+          heading: "4. Limitation of Liability",
+          body: "THE PLATFORM PROVIDES INFORMATIONAL AND ANALYTICAL INSIGHTS ONLY. ALL AI-GENERATED RECOMMENDATIONS, PROFIT CALCULATIONS, ROAS ESTIMATES, HEALTH SCORES, AND DECISION SIMULATIONS ARE PROBABILISTIC IN NATURE AND BASED ON HISTORICAL DATA. THEY DO NOT CONSTITUTE FINANCIAL ADVICE, ACCOUNTING ADVICE, LEGAL ADVICE, OR ANY OTHER FORM OF PROFESSIONAL ADVISORY SERVICE.\n\nYOU ARE SOLELY AND ENTIRELY RESPONSIBLE FOR ANY BUSINESS, FINANCIAL, OR OPERATIONAL DECISION YOU MAKE, WHETHER OR NOT INFORMED BY OUTPUT FROM THIS PLATFORM. REVIXY SL SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING FROM YOUR USE OF OR RELIANCE ON PLATFORM OUTPUTS, INCLUDING BUT NOT LIMITED TO LOSS OF REVENUE, LOSS OF PROFIT, BUSINESS INTERRUPTION, OR LOSS OF DATA.\n\nTO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, REVIXY SL'S TOTAL CUMULATIVE LIABILITY TO YOU FOR ANY CLAIM ARISING OUT OF OR RELATED TO THESE TERMS OR YOUR USE OF THE SERVICE SHALL NOT EXCEED THE TOTAL AMOUNT YOU PAID TO REVIXY IN THE 12 MONTHS PRECEDING THE CLAIM.",
+          notice: "⚠️ Important Notice",
+        },
+        prohibited: {
+          heading: "5. Prohibited Uses",
+          body: "You agree not to use the platform for any of the following purposes:",
+          items: [
+            "Reverse engineering, decompiling, or disassembling any part of the platform's software or algorithms.",
+            "Accessing the platform through automated means (bots, scrapers, or crawlers) without prior written consent.",
+            "Sharing your account credentials with third parties or reselling access to the platform.",
+            "Using the platform to process data belonging to a third party without their explicit authorization.",
+            "Attempting to circumvent, disable, or interfere with any security feature or access control of the platform.",
+            "Using AI-generated outputs to misrepresent the financial performance of your business to investors, lenders, or regulators.",
+            "Uploading or transmitting malicious code, viruses, or any material that could harm the platform or other users.",
+          ],
+        },
+        billing: {
+          heading: "6. Subscription, Billing and Cancellation",
+          body: "REVIXY offers a free tier with limited features and a Pro subscription with full access. Subscription fees, billing cycles, and included features are described on the pricing page and may be updated with 30 days' notice.\n\nPro subscriptions are billed in advance on a monthly or annual basis. All fees are non-refundable except where required by applicable consumer protection law in your EU member state.\n\nYou may cancel your subscription at any time from your account settings. Cancellation takes effect at the end of your current billing period. Your data will remain accessible in read-only mode for 30 days after cancellation, after which it will be permanently deleted in accordance with our data retention policy.",
+        },
+        modifications: {
+          heading: "7. Modifications to the Service or Terms",
+          body: "We reserve the right to modify these Terms at any time. If we make material changes, we will notify you by email and by displaying a prominent notice in the platform at least 15 days before the changes take effect. Your continued use of the platform after the effective date constitutes acceptance of the revised Terms.\n\nWe may also modify, suspend, or discontinue any part of the service at any time. For paid subscribers, we will provide at least 30 days' notice before discontinuing a feature that is central to the contracted service.",
+        },
+        governingLaw: {
+          heading: "8. Governing Law & Jurisdiction",
+          body: "These Terms are governed by and construed in accordance with the laws of Spain, without regard to its conflict of law provisions. EU consumer protection regulations apply where you are a consumer resident in the European Union.\n\nAny dispute arising out of or in connection with these Terms shall first be subject to good-faith negotiation between the parties. If unresolved within 30 days, disputes shall be submitted to the exclusive jurisdiction of the courts of Spain, unless mandatory consumer protection law in your EU member state provides otherwise.\n\nFor EU consumers, the European Commission's Online Dispute Resolution platform is available at https://ec.europa.eu/consumers/odr.",
+        },
+        contact: {
+          heading: "9. Contact",
+          body: "For any question or notice regarding these Terms, contact us at:\n\nEmail: legal@revixy.com\nPostal address: REVIXY SL, [TODO: registered address], Spain\n\nWe will respond to all written legal inquiries within 10 business days.",
+        },
+      },
+    },
+    // TODO: wire to registration form checkbox
+    acceptanceCheckbox: {
+      prefix: "I accept the",
+      termsLink: "Terms and Conditions",
+      middle: "and the",
+      privacyLink: "Privacy Policy",
+      suffix: ", and I understand that AI-generated insights are informational and",
+      bold: "do not constitute financial advice.",
     },
   },
   common: {
