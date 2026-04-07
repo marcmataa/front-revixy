@@ -9,6 +9,7 @@ import { createRegisterSchema } from "../../utils/schemas/auth.schemas.js";
 import { useT } from "../../hooks/useT.js";
 import Input from "../../components/ui/Input.jsx";
 import Button from "../../components/ui/Button.jsx";
+import GoogleIcon from "../../components/ui/GoogleIcon.jsx";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -88,6 +89,7 @@ const Register = () => {
           disabled={isLoading}
           className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--surface2)] text-[var(--text)] text-sm hover:border-[var(--muted)] transition-colors disabled:opacity-50"
         >
+          <GoogleIcon />
           {t.auth.googleButton}
         </button>
 
