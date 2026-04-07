@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
@@ -24,6 +25,15 @@ import TermsPage from "./pages/landing/TermsPage.jsx";
 import LandingLanguageInterceptor from "./providers/LandingLanguageInterceptor.jsx";
 
 export default function App() {
+  useEffect(() => {
+    // Safety net: remove any stored theme that could trigger dark mode in future refactors
+    localStorage.removeItem("theme");
+    localStorage.removeItem("darkMode");
+    localStorage.removeItem("color-scheme");
+    // DO NOT add className="dark" on <html> — the purple theme is the only theme
+    document.documentElement.classList.remove("dark");
+  }, []);
+
   return (
     <Provider store={store}>
       <Router>
