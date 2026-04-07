@@ -19,6 +19,7 @@ import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import AlertsPage from "./pages/alerts/AlertsPage.jsx";
 import ChatPage from "./pages/ai/ChatPage.jsx";
 import Settings from "./pages/settings/Settings.jsx";
+import ProfilePage from "./pages/profile/ProfilePage.jsx";
 import LandingPage from "./pages/landing/LandingPage.jsx";
 import PrivacyPage from "./pages/landing/PrivacyPage.jsx";
 import TermsPage from "./pages/landing/TermsPage.jsx";
@@ -160,6 +161,20 @@ export default function App() {
                   <Layout>
                     <ErrorBoundary>
                       <Settings />
+                    </ErrorBoundary>
+                  </Layout>
+                </OnboardingGuard>
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <AuthGuard>
+                <OnboardingGuard>
+                  <Layout>
+                    <ErrorBoundary>
+                      <ProfilePage />
                     </ErrorBoundary>
                   </Layout>
                 </OnboardingGuard>

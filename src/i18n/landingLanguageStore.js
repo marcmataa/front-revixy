@@ -3,7 +3,8 @@
 // Persiste en localStorage y notifica a los suscriptores en tiempo real
 // Compatible con useSyncExternalStore de React 18+
 
-const STORAGE_KEY = "revixy_landing_lang";
+// Misma clave que uiSlice — Landing y App comparten estado de idioma sin sync extra
+const STORAGE_KEY = "revixy_language";
 const DEFAULT_LANG = "es";
 const ALLOWED = ["es", "en", "ca"];
 

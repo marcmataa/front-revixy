@@ -4,12 +4,19 @@ import { authApi } from "../../api/auth.api.js";
 
 // Valida el token en el servidor al montar la app
 // NUNCA confiar solo en localStorage — el token puede estar expirado
+// También despacha fetchCurrentStore si el token es válido, para que
+// OnboardingGuard tenga los datos de tienda disponibles en el mismo ciclo
 export const checkAuth = createAsyncThunk(
   "auth/checkAuth",
   async (_, { dispatch, rejectWithValue }) => {
     try {
       const { data } = await authApi.getMe();
-      return data.data.user;
+      const user = data.data.user;
+      // Traemos la tienda inmediatamente para que OnboardingGuard pueda decidir
+      // sin esperar a que AuthGuard monte un Effect separado
+      const { fetchCurrentStore } = await import("./storeSlice.js");
+      dispatch(fetchCurrentStore());
+      return user;
     } catch {
       // Limpiamos TODO el estado de Redux al expirar la sesión
       localStorage.removeItem("accessToken");
@@ -63,7 +70,27 @@ export const logout = createAsyncThunk(
     } finally {
       // Limpiamos siempre — aunque falle el API
       localStorage.removeItem("accessToken");
+      // Limpiamos el sessionId del chat para que la próxima sesión empiece limpia
+      localStorage.removeItem("chat_session_id");
       dispatch({ type: "auth/sessionExpired" });
+    }
+  }
+);
+
+// Inicia el flujo OAuth de Google — redirige al backend que redirige a Google
+export const loginWithGoogle = createAsyncThunk(
+  "auth/loginWithGoogle",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await authApi.getGoogleAuthUrl();
+      // Redirigimos al URL de OAuth — no hay return de user aquí
+      window.location.href = data.data.url;
+    } catch (error) {
+      const message =
+        error.response?.status < 500
+          ? error.response?.data?.error
+          : "Error al iniciar sesión con Google. Inténtalo de nuevo.";
+      return rejectWithValue(message);
     }
   }
 );
@@ -133,6 +160,19 @@ const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.loading = false;
+      })
+      // loginWithGoogle — solo manejamos loading y error
+      // El user se setea en AuthCallback después del OAuth redirect
+      .addCase(loginWithGoogle.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginWithGoogle.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(loginWithGoogle.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

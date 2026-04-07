@@ -3,12 +3,14 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice.js";
 import storeReducer from "./slices/storeSlice.js";
 import simulationReducer from "./slices/simulationSlice.js";
+import uiReducer from "./slices/uiSlice.js";
 import { statsApi } from "./slices/statsSlice.js";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   store: storeReducer,
   simulation: simulationReducer,
+  ui: uiReducer,
   [statsApi.reducerPath]: statsApi.reducer,
 });
 

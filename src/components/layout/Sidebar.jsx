@@ -38,8 +38,10 @@ const Icons = {
 
 const ICON_BLOCK = 80;
 
-const Sidebar = () => {
+const Sidebar = ({ forceCollapsed = false }) => {
   const [collapsed, setCollapsed] = useState(false);
+  // En tablet el Layout fuerza el colapso sin que el usuario pueda expandir
+  const isCollapsed = forceCollapsed || collapsed;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const t = useT();
@@ -49,9 +51,9 @@ const Sidebar = () => {
   const shopifyConnected = !!currentStore?.shopifyDomain;
   const metaConnected = !!currentStore?.metaAdAccountId;
 
-  const handleLogout = async () => {
-    await dispatch(logout());
-    navigate("/login", { replace: true });
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/", { replace: true });
   };
 
   const navItems = [
@@ -65,21 +67,23 @@ const Sidebar = () => {
     <aside
       className="relative flex flex-col h-full bg-[var(--surface)] border-r border-[var(--border)] flex-shrink-0 font-[DM_Sans]"
       style={{
-        width: collapsed ? ICON_BLOCK : 240,
-        minWidth: collapsed ? ICON_BLOCK : 240,
+        width: isCollapsed ? ICON_BLOCK : 240,
+        minWidth: isCollapsed ? ICON_BLOCK : 240,
         transition: 'width 200ms ease-in-out',
         zIndex: "var(--z-sidebar)",
       }}
     >
+      {!forceCollapsed && (
       <button
         onClick={() => setCollapsed((c) => !c)}
         className="absolute top-8 right-0 translate-x-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center bg-[var(--surface)] border border-[var(--border)] rounded-full text-[var(--muted)] hover:text-[var(--text)] transition-colors duration-150 outline-none"
         style={{ zIndex: "calc(var(--z-sidebar) + 1)" }}
       >
-        <svg className="w-2.5 h-2.5" style={{ transform: collapsed ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 300ms' }} viewBox="0 0 16 16" fill="none">
+        <svg className="w-2.5 h-2.5" style={{ transform: isCollapsed ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 300ms' }} viewBox="0 0 16 16" fill="none">
           <path d="M10 4L6 8l4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
+      )}
 
       <div className="flex flex-col flex-1 overflow-hidden">
         <div className="flex items-center h-16 border-b border-[var(--border)] flex-shrink-0">
@@ -96,14 +100,14 @@ const Sidebar = () => {
               <div className="flex items-center justify-center flex-shrink-0" style={{ width: ICON_BLOCK - 16 }}>
                 <Icon />
               </div>
-              {!collapsed && <span className="absolute left-[64px] whitespace-nowrap">{label}</span>}
+              {!isCollapsed && <span className="absolute left-[64px] whitespace-nowrap">{label}</span>}
             </NavLink>
           ))}
         </nav>
 
         {/* SECCIÓN INTEGRACIONES */}
         <div className="border-t border-[var(--border)] relative" style={{ padding: '1.5rem 0' }}>
-          {!collapsed && (
+          {!isCollapsed && (
             <p className="text-[10px] text-[var(--muted)] px-7 uppercase tracking-widest font-bold opacity-60 mb-6">{t.settings.tabs.integrations}</p>
           )}
           
@@ -113,12 +117,12 @@ const Sidebar = () => {
               <div className="flex items-center justify-center flex-shrink-0 w-[80px]">
                 <div className="relative">
                   <img src={ShopifyImg} alt="Shopify" className="w-8 h-8 object-contain" />
-                  {collapsed && (
+                  {isCollapsed && (
                     <div className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full border-2 border-[var(--surface)] ${shopifyConnected ? "bg-green-500" : "bg-gray-500"}`} />
                   )}
                 </div>
               </div>
-              {!collapsed && (
+              {!isCollapsed && (
                 <div className="absolute left-[80px] flex items-center justify-between w-[145px]">
                   <span className="text-xs font-medium text-[var(--muted)]">{t.settings.integrations.shopify}</span>
                   <Badge variant={shopifyConnected ? "success" : "muted"} className="min-w-[90px] text-center justify-center py-1">
@@ -133,12 +137,12 @@ const Sidebar = () => {
               <div className="flex items-center justify-center flex-shrink-0 w-[80px]">
                 <div className="relative">
                   <img src={MetaImg} alt="Meta" className="w-7 h-7 object-contain" />
-                  {collapsed && (
+                  {isCollapsed && (
                     <div className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full border-2 border-[var(--surface)] ${metaConnected ? "bg-green-500" : "bg-gray-500"}`} />
                   )}
                 </div>
               </div>
-              {!collapsed && (
+              {!isCollapsed && (
                 <div className="absolute left-[80px] flex items-center justify-between w-[145px]">
                   <span className="text-xs font-medium text-[var(--muted)]">{t.settings.integrations.meta}</span>
                   <Badge variant={metaConnected ? "success" : "muted"} className="min-w-[90px] text-center justify-center py-1">
@@ -162,7 +166,7 @@ const Sidebar = () => {
                   {user?.name?.[0]?.toUpperCase() || "M"}
                 </div>
               </div>
-              {!collapsed && (
+              {!isCollapsed && (
                 <div className="absolute left-[80px] flex flex-col text-left">
                   <span className="text-xs font-bold text-[var(--text)] truncate">{user?.name || "Marc Mata"}</span>
                   <span className="text-[10px] text-[var(--muted)] truncate font-medium group-hover:text-[var(--accent)] transition-colors">{t.common.viewProfile}</span>
@@ -181,7 +185,7 @@ const Sidebar = () => {
       <div className="flex items-center justify-center flex-shrink-0" style={{ width: ICON_BLOCK - 16 }}>
         <Icons.Logout />
       </div>
-      {!collapsed && <span className="absolute left-[64px] text-sm font-medium whitespace-nowrap">Cerrar sesión</span>}
+      {!isCollapsed && <span className="absolute left-[64px] text-sm font-medium whitespace-nowrap">{t.auth.logout}</span>}
     </button>
   </div>
 </div>
