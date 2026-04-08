@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../../app/slices/authSlice.js";
 import { selectCurrentStore } from "../../app/slices/storeSlice.js";
+import { setLanguage } from "../../app/slices/uiSlice.js";
 import { useT } from "../../hooks/useT.js";
 
 // Tus imágenes originales
@@ -47,6 +48,7 @@ const Sidebar = ({ forceCollapsed = false }) => {
   const t = useT();
   const user = useSelector(selectUser);
   const currentStore = useSelector(selectCurrentStore);
+  const activeLang = useSelector((state) => state.ui.language);
 
   const shopifyConnected = !!currentStore?.shopifyDomain;
   const metaConnected = !!currentStore?.metaAdAccountId;
@@ -86,8 +88,8 @@ const Sidebar = ({ forceCollapsed = false }) => {
       )}
 
       <div className="flex flex-col flex-1 overflow-hidden">
-        <div className="flex items-center h-16 border-b border-[var(--border)] flex-shrink-0">
-          <Logo collapsed={collapsed} />
+        <div className={`flex items-center h-16 border-b border-[var(--border)] flex-shrink-0 ${isCollapsed ? "justify-center" : "pl-4"}`}>
+          <Logo variant={isCollapsed ? "icon" : "full"} />
         </div>
 
         <nav className="flex-1 py-3 space-y-1">
@@ -177,8 +179,27 @@ const Sidebar = ({ forceCollapsed = false }) => {
 
           <div className="border-t border-[var(--border)]" />
 
+          {!isCollapsed && (
+            <div className="flex items-center justify-center gap-1 py-2 px-4">
+              {["es", "en", "ca"].map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => dispatch(setLanguage(lang))}
+                  className="px-2.5 py-1 rounded-md text-xs font-semibold transition-colors duration-150"
+                  style={{
+                    color: activeLang === lang ? "var(--accent)" : "var(--muted)",
+                    fontWeight: activeLang === lang ? "700" : "500",
+                    background: activeLang === lang ? "rgba(108, 99, 255, 0.12)" : "transparent",
+                  }}
+                >
+                  {lang.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          )}
+
           <div className="py-2">
-          <button 
+          <button
       onClick={handleLogout} 
       className="relative flex items-center py-2.5 mx-2 rounded-xl text-sm text-[var(--muted)] hover:text-red-500 hover:bg-red-500/5 transition-colors duration-200 w-[calc(100%-16px)]"
     >
