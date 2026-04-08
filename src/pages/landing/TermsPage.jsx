@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useT } from "../../hooks/useT.js";
 import Logo from "../../components/ui/logo.jsx";
@@ -151,11 +150,6 @@ export default function TermsPage() {
   const t = useT();
   const terms = t.legal.terms;
   const s = terms.sections;
-
-  // Llevamos al usuario al inicio al navegar a esta página
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg)" }}>

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useT } from "../../hooks/useT.js";
 import Logo from "../../components/ui/logo.jsx";
@@ -101,11 +100,6 @@ function SectionDivider() {
 export default function PrivacyPage() {
   const t = useT();
   const p = t.legal.privacy;
-
-  // Llevamos al usuario al inicio al navegar a esta página
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg)" }}>
