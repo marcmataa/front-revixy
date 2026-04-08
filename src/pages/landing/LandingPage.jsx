@@ -1,7 +1,10 @@
-import { useEffect, useRef, useState, useMemo, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useMemo, useSyncExternalStore, useId } from "react";
+import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useMediaQuery } from "../../hooks/useMediaQuery.js";
 import { selectUser } from "../../app/slices/authSlice.js";
+import { setLanguage } from "../../app/slices/uiSlice.js";
 import { useT } from "../../hooks/useT.js";
 import { landingLanguageStore } from "../../i18n/landingLanguageStore.js";
 
@@ -18,11 +21,8 @@ import {
   Sliders,
   MessageSquare,
   Bot,
-  User,
   ChevronDown,
   X,
-  Menu,
-  Globe,
 } from "lucide-react";
 
 // ─── Entry animation helper ───────────────────────────────────────────────────
@@ -383,106 +383,328 @@ function LogoCarousel({ logos }) {
 
 // ─── HERO ─────────────────────────────────────────────────────────────────────
 // ─── Language Selector (Navbar) ───────────────────────────────────────────────
+// ─── Banderas inline SVG — safe cross-browser, sin emojis ────────────────────
+const EsFlag = () => (
+  <svg width="20" height="13" viewBox="0 0 750 500" xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true" style={{ borderRadius: "2px", display: "block", flexShrink: 0 }}>
+    <rect width="750" height="125" fill="#AD1519"/>
+    <rect width="750" height="250" y="125" fill="#FABD00"/>
+    <rect width="750" height="125" y="375" fill="#AD1519"/>
+  </svg>
+);
+
+// UKFlag usa useId() para garantizar IDs únicos cuando se monta en múltiples lugares
+const UKFlag = () => {
+  const id = useId();
+  return (
+    <svg width="20" height="10" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true" style={{ borderRadius: "2px", display: "block", flexShrink: 0 }}>
+      <defs>
+        <clipPath id={id}>
+          <rect width="60" height="30"/>
+        </clipPath>
+      </defs>
+      <g clipPath={`url(#${id})`}>
+        <path d="M0 0h60v30H0z" fill="#012169"/>
+        <path d="M0 0l60 30m0-30L0 30" stroke="#fff" strokeWidth="6"/>
+        <path d="M0 0l60 30m0-30L0 30" stroke="#C8102E" strokeWidth="4"/>
+        <path d="M30 0v30M0 15h60" stroke="#fff" strokeWidth="10"/>
+        <path d="M30 0v30M0 15h60" stroke="#C8102E" strokeWidth="6"/>
+      </g>
+    </svg>
+  );
+};
+
+const CaFlag = () => (
+  <svg width="20" height="14" viewBox="0 0 9 5" xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true" style={{ borderRadius: "2px", display: "block", flexShrink: 0 }}>
+    <rect width="9" height="5" fill="#fcd015"/>
+    <rect width="9" height="0.8" y="0.5" fill="#d3222d"/>
+    <rect width="9" height="0.8" y="1.6" fill="#d3222d"/>
+    <rect width="9" height="0.8" y="2.7" fill="#d3222d"/>
+    <rect width="9" height="0.8" y="3.8" fill="#d3222d"/>
+  </svg>
+);
+
+function LangFlag({ code }) {
+  if (code === "es") return <EsFlag />;
+  if (code === "en") return <UKFlag />;
+  if (code === "ca") return <CaFlag />;
+  return null;
+}
+
+// Idiomas soportados
+const LANGS = [
+  { code: "es", label: "ES", ariaLabel: "Cambiar a Español" },
+  { code: "en", label: "EN", ariaLabel: "Switch to English" },
+  { code: "ca", label: "CA", ariaLabel: "Canviar a Català" },
+];
+
 function LanguageSelector() {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const ref = useRef(null);
+  const dispatch = useDispatch();
+  const t = useT();
+  const isMobile = useMediaQuery("(max-width: 639px)");
 
   const activeLang = useSyncExternalStore(
     landingLanguageStore.subscribe,
     landingLanguageStore.getLanguage
   );
 
-  // Guardia de hidratación — no renderizar hasta que el componente esté montado
+  // Guardia de hidratación
   useEffect(() => { setMounted(true); }, []);
 
-  // Actualizar el atributo lang del <html> en cada cambio de idioma
+  // Sincronizar lang attribute del HTML
   useEffect(() => {
     if (mounted) document.documentElement.lang = activeLang;
   }, [activeLang, mounted]);
 
-  // Cerrar dropdown al hacer click fuera
+  // Click fuera — solo aplica en desktop (dropdown)
   useEffect(() => {
-    if (!open) return;
+    if (!open || isMobile) return;
     const handler = (e) => {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
+  }, [open, isMobile]);
+
+  // Escape key — aplica en ambos modos
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [open]);
 
-  const langs = [
-    { code: "es", label: "ES", ariaLabel: "Cambiar a Español" },
-    { code: "en", label: "EN", ariaLabel: "Switch to English" },
-    { code: "ca", label: "CA", ariaLabel: "Canviar a Català" },
-  ];
+  // Scroll lock — bloquea el scroll del body mientras el bottom sheet está abierto en mobile
+  useEffect(() => {
+    if (isMobile && open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [open, isMobile]);
 
-  // No renderizar hasta que el componente esté montado (evita hidratación SSR)
-  if (!mounted) return <div className="w-[72px] flex-shrink-0" />;
+  const handleSelect = (code) => {
+    landingLanguageStore.setLanguage(code);
+    dispatch(setLanguage(code));
+    setOpen(false);
+  };
 
-  return (
-    <div ref={ref} className="relative w-[72px] flex-shrink-0 flex items-center justify-center">
-      {/* Capa interna: overflow-hidden garantiza que el botón no puede empujar hacia afuera */}
-      <div className="w-full overflow-hidden">
+  const activeLangData = LANGS.find((l) => l.code === activeLang) ?? LANGS[0];
+
+  if (!mounted) return <div style={{ width: isMobile ? "44px" : "84px", height: "36px", flexShrink: 0 }} />;
+
+  // ─── MOBILE: solo bandera + bottom sheet via portal ───────────────────────
+  if (isMobile) {
+    return (
+      <>
         <button
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-haspopup="listbox"
+          onClick={() => setOpen(true)}
           aria-label="Seleccionar idioma"
-          className="flex items-center justify-center gap-1.5 w-full min-h-[44px] sm:min-h-0 px-2.5 py-2 rounded-lg text-xs font-semibold transition-colors duration-150 hover:bg-white/10"
+          aria-haspopup="dialog"
           style={{
-            color: "rgba(255, 255, 255, 0.7)",
+            display: "flex",
+            alignItems: "center",
+            gap: "4px",
+            padding: "10px",
+            margin: "-10px",
             background: "transparent",
             border: "none",
-            fontFamily: "DM Sans, sans-serif",
+            cursor: "pointer",
+            borderRadius: "8px",
+            transition: "opacity 150ms ease",
           }}
+          onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.7"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; }}
         >
-          <Globe size={14} strokeWidth={1.5} className="flex-shrink-0" />
-          <span className="inline-block w-6 text-center">{activeLang.toUpperCase()}</span>
+          <LangFlag code={activeLang} />
+          <ChevronDown size={12} style={{ color: "var(--muted)", flexShrink: 0 }} />
         </button>
-      </div>
 
-      {/* Dropdown con animación de entrada opacity + scale */}
-      <div
-        className="absolute right-0 mt-2 rounded-xl overflow-hidden"
+        {open && createPortal(
+          <>
+            {/* Overlay oscuro */}
+            <div
+              aria-hidden="true"
+              onClick={() => setOpen(false)}
+              style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 199 }}
+            />
+            {/* Bottom sheet */}
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label={t.common.selectLanguage}
+              style={{
+                position: "fixed",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                zIndex: 200,
+                borderRadius: "16px 16px 0 0",
+                padding: "12px 0 calc(24px + env(safe-area-inset-bottom))",
+                background: "var(--surface)",
+                borderTop: "1px solid rgba(255,255,255,0.1)",
+                boxShadow: "0 -8px 32px rgba(0,0,0,0.4)",
+                animation: "sheetEnter 200ms ease forwards",
+              }}
+            >
+              {/* Drag handle decorativo */}
+              <div style={{ width: "36px", height: "4px", borderRadius: "2px", background: "rgba(255,255,255,0.2)", margin: "0 auto 16px" }} />
+
+              {/* Título */}
+              <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--muted)", textAlign: "center", padding: "0 24px 8px", fontFamily: "DM Sans, sans-serif", margin: 0 }}>
+                {t.common.selectLanguage}
+              </p>
+
+              {/* Opciones de idioma */}
+              {LANGS.map(({ code, ariaLabel }) => {
+                const isActive = activeLang === code;
+                return (
+                  <button
+                    key={code}
+                    role="option"
+                    aria-selected={isActive}
+                    aria-label={ariaLabel}
+                    onClick={() => handleSelect(code)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "12px",
+                      width: "100%",
+                      minHeight: "52px",
+                      padding: "0 24px",
+                      background: "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                      fontFamily: "DM Sans, sans-serif",
+                      fontSize: "15px",
+                      fontWeight: 500,
+                      color: "var(--text)",
+                      transition: "background 150ms ease",
+                      textAlign: "left",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+                  >
+                    <LangFlag code={code} />
+                    <span style={{ flex: 1 }}>{t.languages[code]}</span>
+                    {isActive && (
+                      <span aria-hidden="true" style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--accent)", flexShrink: 0 }} />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </>,
+          document.body
+        )}
+      </>
+    );
+  }
+
+  // ─── DESKTOP: bandera + ISO + chevron + dropdown glassmorphism ────────────
+  return (
+    <div ref={ref} className="relative flex-shrink-0">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        aria-label="Seleccionar idioma"
         style={{
-          background: "rgba(18, 15, 29, 0.92)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          boxShadow: "0 16px 40px rgba(0, 0, 0, 0.55)",
+          display: "flex",
+          alignItems: "center",
+          gap: "6px",
+          padding: "6px 10px",
+          borderRadius: "8px",
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          fontFamily: "DM Sans, sans-serif",
+          fontSize: "0.75rem",
+          fontWeight: 600,
+          color: "rgba(255,255,255,0.85)",
+          minHeight: "36px",
+          transition: "background 150ms ease",
+          whiteSpace: "nowrap",
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+      >
+        <LangFlag code={activeLangData.code} />
+        <span>{activeLangData.label}</span>
+        <ChevronDown
+          size={13}
+          strokeWidth={2.5}
+          style={{ flexShrink: 0, transition: "transform 200ms ease", transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
+        />
+      </button>
+
+      {/* Dropdown glassmorphism — slide-down + fade */}
+      <div
+        role="listbox"
+        aria-label="Seleccionar idioma"
+        style={{
+          position: "absolute",
+          top: "calc(100% + 6px)",
+          right: 0,
+          left: "auto",
+          minWidth: "120px",
+          background: "rgba(17, 17, 24, 0.85)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          border: "1px solid rgba(255,255,255,0.1)",
+          borderRadius: "8px",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
           zIndex: 9999,
-          minWidth: "80px",
-          maxWidth: "calc(100vw - 2rem)",
+          overflow: "hidden",
           opacity: open ? 1 : 0,
-          transform: open ? "scale(1)" : "scale(0.95)",
+          transform: open ? "translateY(0)" : "translateY(-10px)",
           pointerEvents: open ? "auto" : "none",
-          transformOrigin: "top right",
-          transition: "opacity 0.15s ease-out, transform 0.15s ease-out",
+          transition: "opacity 200ms ease, transform 200ms ease",
         }}
       >
-        {langs.map(({ code, label, ariaLabel }) => (
-          <button
-            key={code}
-            onClick={() => { landingLanguageStore.setLanguage(code); setOpen(false); }}
-            aria-label={ariaLabel}
-            className="w-full text-left px-4 py-2 text-xs font-semibold transition-colors duration-150"
-            style={{
-              color: activeLang === code ? "rgb(108, 99, 255)" : "rgba(255, 255, 255, 0.6)",
-              background: activeLang === code ? "rgba(108, 99, 255, 0.08)" : "transparent",
-              fontFamily: "DM Sans, sans-serif",
-              display: "block",
-            }}
-            onMouseEnter={(e) => {
-              if (activeLang !== code) e.currentTarget.style.background = "rgba(255,255,255,0.05)";
-            }}
-            onMouseLeave={(e) => {
-              if (activeLang !== code) e.currentTarget.style.background = "transparent";
-            }}
-          >
-            {label}
-          </button>
-        ))}
+        {LANGS.map(({ code, label, ariaLabel }) => {
+          const isActive = activeLang === code;
+          return (
+            <button
+              key={code}
+              role="option"
+              aria-selected={isActive}
+              aria-label={ariaLabel}
+              onClick={() => handleSelect(code)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                width: "100%",
+                minHeight: "40px",
+                padding: "0 12px",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                fontFamily: "DM Sans, sans-serif",
+                fontSize: "0.75rem",
+                fontWeight: 600,
+                color: "var(--text)",
+                transition: "background 150ms ease",
+                textAlign: "left",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+            >
+              <LangFlag code={code} />
+              <span style={{ flex: 1 }}>{label}</span>
+              {isActive && (
+                <span aria-hidden="true" style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--accent)", flexShrink: 0 }} />
+              )}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -507,54 +729,62 @@ export function Hero() {
       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 30% 30%, rgba(108, 99, 255, 0.18) 0%, transparent 60%)" }} />
       <div className="absolute bottom-0 left-0 w-full h-80 pointer-events-none" style={{ background: "linear-gradient(transparent, #1a1a2e)" }} />
 
-      {/* NAV MODIFICADO PARA RESPONSIVE */}
-      <nav className="sticky top-0 z-50 flex items-center justify-between px-4 md:px-10 py-4 md:py-5 shrink-0" 
-        style={{ background: "rgba(13, 11, 22, 0.85)", backdropFilter: "blur(28px) saturate(180%)", WebkitBackdropFilter: "blur(28px) saturate(180%)", borderBottom: "1px solid transparent", borderImage: "linear-gradient(to right, transparent, rgba(108, 99, 255, 0.45), rgba(255, 255, 255, 0.1), rgba(108, 99, 255, 0.45), transparent) 1 / 1 / 0 stretch", boxShadow: "rgba(0, 0, 0, 0.8) 0px 15px 40px -12px" }}>
-        <Link to="/" className="nav-logo-link transition-all duration-300 active:scale-95 flex-shrink-0">
-          <div className="nav-logo-glow flex items-center">
-            {/* Logo escalado para móvil */}
-            <div className="w-[60px] h-[45px] md:w-[80px] md:h-[60px]" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <img alt="Logo" src="/src/assets/logo.png" style={{ width: "100%", height: "100%", objectFit: "contain" }} className="scale-[1.3] md:scale-[1.6]" />
-            </div>
-            <span className="text-[18px] md:text-[25px]" style={{ fontFamily: "Syne, sans-serif", fontWeight: 800, textTransform: "uppercase", letterSpacing: "-0.04em", color: "#e8e8f0", marginLeft: "-4px", marginTop: "4px" }}>
-              REVI<span style={{ color: "rgb(108, 99, 255)" }}>XY</span>
-            </span>
-          </div>
-        </Link>
-        <div className="flex items-center gap-1 sm:gap-3">
-          {/* Selector: doble capa de ancho fijo — outer en Navbar + inner en el componente */}
-          <div className="relative w-[72px] flex-shrink-0">
+      {/* Navbar: 56px mobile / 64px desktop
+          Mobile layout (grid 1fr auto 1fr): [flag LEFT] [logo CENTER] [CTA RIGHT]
+          Desktop layout (flex):             [logo LEFT] ... [selector + login + CTA RIGHT] */}
+      <nav
+        className="relative sticky top-0 z-50 flex items-center justify-between shrink-0 px-4 h-14 sm:px-8 sm:h-16"
+        style={{ background: "rgba(13, 11, 22, 0.85)", backdropFilter: "blur(28px) saturate(180%)", WebkitBackdropFilter: "blur(28px) saturate(180%)", borderBottom: "1px solid transparent", borderImage: "linear-gradient(to right, transparent, rgba(108, 99, 255, 0.45), rgba(255, 255, 255, 0.1), rgba(108, 99, 255, 0.45), transparent) 1 / 1 / 0 stretch", boxShadow: "rgba(0, 0, 0, 0.8) 0px 15px 40px -12px" }}
+      >
+        {/* ── LEFT ZONE — col 1 en mobile, flex-start ────────────────────── */}
+        <div className="flex items-center justify-start">
+  <div className="sm:hidden">
+    <LanguageSelector />
+  </div>
+
+  {/* Desktop logo */}
+  <Link to="/" className="hidden sm:flex nav-logo-link">
+    <Logo variant="full" />
+  </Link>
+</div>
+
+        {/* ── CENTER ZONE — col 2 (auto) en mobile, logo matemáticamente centrado ── */}
+        <div className="flex items-center justify-center sm:hidden">
+  <Link to="/" className="nav-logo-link transition-all duration-300 active:scale-95 flex-shrink-0">
+    <Logo variant="full" />
+  </Link>
+</div>
+
+        {/* ── RIGHT ZONE — col 3 (1fr) en mobile, flex-end ──────────────── */}
+        <div className="flex items-center justify-end gap-2 sm:gap-4">
+          {/* Desktop: dropdown selector — oculto en mobile (mobile usa la zona izquierda) */}
+          <div className="hidden sm:block">
             <LanguageSelector />
           </div>
-          {/* Grupo de botones aislado: flex-shrink-0 garantiza que no sea empujado por el selector */}
-          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-            {/* Login mobile: icono User con touch target WCAG 44×44px — solo en mobile */}
-            <Link
-              to="/login"
-              aria-label={t.landing.nav.login}
-              className="sm:hidden flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
-              style={{ color: "rgba(255, 255, 255, 0.65)" }}
-            >
-              <User size={18} />
-            </Link>
-            {/* Login desktop: ancho fijo sm:w-[9rem] — el texto cambia, la caja nunca */}
-            <Link
-              to="/login"
-              className="hidden sm:inline-flex sm:w-[9rem] sm:justify-center flex-shrink-0 nav-btn-secondary-pro items-center px-3 py-2 rounded-lg text-xs md:text-sm font-medium transition-colors whitespace-nowrap overflow-hidden"
-              style={{ color: "rgba(255, 255, 255, 0.7)", background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.08)", fontFamily: "DM Sans, sans-serif" }}
-            >
-              {t.landing.nav.login}
-            </Link>
-            {/* CTA: ancho fijo sm:w-[9rem] en desktop, w-auto en mobile (texto corto) */}
-            <Link
-              to="/register"
-              className="nav-btn-primary-animated flex-shrink-0 inline-flex w-[5rem] justify-center sm:w-[9rem] items-center px-3 py-2 rounded-lg text-xs sm:text-sm font-medium text-white transition-colors whitespace-nowrap overflow-hidden"
-              style={{ background: "rgb(108, 99, 255)", fontFamily: "DM Sans, sans-serif", boxShadow: "0 0 25px rgba(108, 99, 255, 0.35)" }}
-            >
-              <span className="hidden sm:inline">{t.landing.nav.cta}</span>
-              <span className="sm:hidden">{t.landing.nav.ctaRes}</span>
-            </Link>
-          </div>
+
+          {/* Login — visible solo en desktop */}
+          <Link
+            to="/login"
+            className="hidden sm:inline-flex items-center justify-center flex-shrink-0 nav-btn-secondary-pro px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap sm:w-[148px]"
+            style={{ color: "rgba(255, 255, 255, 0.7)", background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.08)", fontFamily: "DM Sans, sans-serif" }}
+          >
+            {t.landing.nav.login}
+          </Link>
+
+          {/* CTA: siempre visible — tamaño reducido en mobile para que el logo quede centrado */}
+          <Link
+            to="/register"
+            className="nav-btn-primary-animated flex-shrink-0 inline-flex items-center justify-center text-white font-medium whitespace-nowrap text-center px-[14px] py-2 sm:px-4 text-[13px] sm:text-sm min-w-[100px] max-w-[100px] sm:min-w-[152px] sm:max-w-[152px]"
+            style={{
+              background: "rgb(108, 99, 255)",
+              fontFamily: "DM Sans, sans-serif",
+              boxShadow: "0 0 25px rgba(108, 99, 255, 0.35)",
+              borderRadius: "8px",
+            }}
+          >
+            <span className="hidden sm:inline">{t.landing.nav.cta}</span>
+            <span className="sm:hidden">{t.landing.nav.ctaRes}</span>
+          </Link>
         </div>
       </nav>
 
@@ -577,6 +807,17 @@ export function Hero() {
               
               <div className="flex flex-col items-center md:items-start gap-5 mb-10" style={fadeInStyle(360)}>
                 <Link to="/register" className="hero-cta-btn inline-flex items-center px-8 py-4 rounded-xl font-semibold text-white active:scale-[0.98]">{t.landing.hero.cta}</Link>
+                {/* Login secundario — solo mobile, el desktop lo muestra en el navbar */}
+                <Link
+                  to="/login"
+                  className="sm:hidden text-sm"
+                  style={{ color: "rgba(255,255,255,0.45)", fontFamily: "DM Sans, sans-serif" }}
+                >
+                  {t.auth.hasAccount}{" "}
+                  <span style={{ color: "var(--accent)", textDecoration: "underline", textUnderlineOffset: "3px" }}>
+                    {t.auth.loginLink}
+                  </span>
+                </Link>
                 <div className="flex flex-col items-center md:items-start gap-3">
                   <span className="text-xs" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "DM Sans, sans-serif" }}>{t.landing.hero.ctaSub}</span>
                   
@@ -609,6 +850,7 @@ export function Hero() {
 
       <style>{`
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-33.33%); } }
+        @keyframes sheetEnter { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .nav-btn-secondary-pro:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(108, 99, 255, 0.6) !important; color: white !important; transform: translateY(-1px); }
         .nav-btn-primary-animated:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 10px 25px rgba(108, 99, 255, 0.5); }
       `}</style>
@@ -1542,6 +1784,7 @@ function FinalCTASection() {
 // ─── Section 8 — Footer ───────────────────────────────────────────────────────
 function Footer() {
   const t = useT();
+  const dispatch = useDispatch();
   const langs = ["es", "en", "ca"];
 
   // Leemos el idioma directamente del store global (SSOT) — no estado local aislado
@@ -1597,7 +1840,7 @@ function Footer() {
               {langs.map((lang) => (
                 <button
                   key={lang}
-                  onClick={() => landingLanguageStore.setLanguage(lang)}
+                  onClick={() => { landingLanguageStore.setLanguage(lang); dispatch(setLanguage(lang)); }}
                   aria-label={lang === "es" ? "Cambiar a Español" : lang === "en" ? "Switch to English" : "Canviar a Català"}
                   className={`lang-btn px-3 py-1 rounded-md text-xs font-semibold transition-colors duration-150 ${
                     activeLang === lang ? "active" : ""
