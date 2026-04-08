@@ -18,6 +18,7 @@ export default {
     hasAccount: "¿Ya tienes cuenta?",
     loginLink: "Inicia sesión",
     logout: "Cerrar sesión",
+    backToHomeAriaLabel: "Volver al inicio",
   },
   dashboard: {
     title: "Panel de control",
@@ -480,5 +481,11 @@ export default {
     errorBoundaryDescription:
       "Ha ocurrido un error inesperado en esta sección. El resto de la aplicación sigue funcionando.",
     viewProfile: "Ver perfil y suscripción",
+    selectLanguage: "Selecciona el idioma",
+  },
+  languages: {
+    es: "Español",
+    en: "Inglés",
+    ca: "Catalán",
   },
 };

@@ -18,6 +18,7 @@ export default {
     hasAccount: "Already have an account?",
     loginLink: "Sign in",
     logout: "Sign out",
+    backToHomeAriaLabel: "Go back to home",
   },
   dashboard: {
     title: "Dashboard",
@@ -477,5 +478,11 @@ export default {
     errorBoundaryDescription:
       "An unexpected error occurred in this section. The rest of the app is still working.",
     viewProfile: "View profile and subscription",
+    selectLanguage: "Select language",
+  },
+  languages: {
+    es: "Spanish",
+    en: "English",
+    ca: "Catalan",
   },
 };

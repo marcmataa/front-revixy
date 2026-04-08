@@ -18,6 +18,7 @@ export default {
     hasAccount: "Ja tens compte?",
     loginLink: "Inicia sessió",
     logout: "Tancar sessió",
+    backToHomeAriaLabel: "Torna a l'inici",
   },
   dashboard: {
     title: "Tauler de control",
@@ -482,5 +483,11 @@ export default {
     errorBoundaryDescription:
       "S'ha produït un error inesperat en aquesta secció. La resta de l'aplicació continua funcionant.",
     viewProfile: "Veure perfil i suscripció",
+    selectLanguage: "Selecciona l'idioma",
+  },
+  languages: {
+    es: "Espanyol",
+    en: "Anglès",
+    ca: "Català",
   },
 };
