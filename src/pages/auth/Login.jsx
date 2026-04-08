@@ -10,6 +10,7 @@ import { useT } from "../../hooks/useT.js";
 import Input from "../../components/ui/Input.jsx";
 import Button from "../../components/ui/Button.jsx";
 import GoogleIcon from "../../components/ui/GoogleIcon.jsx";
+import AuthLayout from "../../components/layout/AuthLayout.jsx";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -55,8 +56,8 @@ const Login = () => {
   const isLoading = loading || isSubmitting;
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8">
+    <AuthLayout>
+      <div className="w-full bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8">
         <h1 className="text-2xl font-bold text-[var(--text)] font-[Syne] mb-2">{t.auth.loginTitle}</h1>
         <p className="text-[var(--muted)] text-sm mb-8">{t.auth.loginSubtitle}</p>
 
@@ -111,7 +112,7 @@ const Login = () => {
           </Link>
         </p>
       </div>
-    </div>
+    </AuthLayout>
   );
 };
 
