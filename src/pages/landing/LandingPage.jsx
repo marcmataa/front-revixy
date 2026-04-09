@@ -1890,7 +1890,22 @@ function Footer() {
 // ─── Root component ────────────────────────────────────────────────────────────
 export default function LandingPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector(selectUser);
+
+  // Sincronizar el idioma de Redux con localStorage al montar la landing.
+  // Problema: detectLanguage() en uiSlice se evalúa a nivel de módulo (una sola vez al
+  // arrancar la app). Cuando el store se resetea en logout (auth/sessionExpired), uiSlice
+  // vuelve a su initialState con el valor capturado al inicio — que puede ser distinto al
+  // valor actual de localStorage si el usuario cambió idioma dentro de la App.
+  // Resultado visible: el LanguageSelector mostraba el idioma correcto (lee localStorage
+  // directamente via landingLanguageStore) pero useT() renderizaba en el idioma antiguo
+  // (leía state.ui.language, que era el valor stale del initialState tras el reset).
+  // Fix: al montar la landing, empujamos el valor actual de localStorage a Redux para
+  // garantizar que ambas fuentes de verdad están sincronizadas antes del primer render.
+  useEffect(() => {
+    dispatch(setLanguage(landingLanguageStore.getLanguage()));
+  }, [dispatch]);
 
   useEffect(() => {
     if (user) navigate("/dashboard", { replace: true });
