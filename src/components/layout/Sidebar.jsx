@@ -10,7 +10,6 @@ import { useT } from "../../hooks/useT.js";
 import ShopifyImg from "../../assets/shopify.png";
 import MetaImg from "../../assets/meta.png";
 import Logo from "../ui/logo.jsx";
-import Badge from "../ui/Badge.jsx";
 
 const Icons = {
   Dashboard: () => (
@@ -32,6 +31,14 @@ const Icons = {
       <path d="M12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm7.43-2.03c.04-.31.07-.63.07-.97s-.03-.67-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.33-.07.65-.07 1s.03.67.07 1l-2.11 1.66c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.58 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66Z"/>
     </svg>
   ),
+  Integrations: () => (
+    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4" />
+      <path d="M14 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+      <path d="M9 12h6" />
+      <path d="M12 9v6" />
+    </svg>
+  ),
   Logout: () => (
     <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none"><path d="M13 15l4-5-4-5M17 10H8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M8 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h4" stroke="currentColor" strokeWidth="1.5" /></svg>
   ),
@@ -50,7 +57,7 @@ const Sidebar = ({ forceCollapsed = false }) => {
   const currentStore = useSelector(selectCurrentStore);
   const activeLang = useSelector((state) => state.ui.language);
 
-  const shopifyConnected = !!currentStore?.shopifyDomain;
+  const shopifyConnected = !!currentStore?.shopifyDomain && currentStore?.status === "ACTIVE";
   const metaConnected = !!currentStore?.metaAdAccountId;
 
   const handleLogout = () => {
@@ -62,6 +69,7 @@ const Sidebar = ({ forceCollapsed = false }) => {
     { path: "/dashboard", label: t.dashboard.title, Icon: Icons.Dashboard },
     { path: "/alerts", label: t.alerts.title, Icon: Icons.Alerts },
     { path: "/chat", label: t.chat.title, Icon: Icons.Chat },
+    { path: "/integrations", label: t.integrations.pageTitle, Icon: Icons.Integrations },
     { path: "/settings", label: t.settings.title, Icon: Icons.Settings },
   ];
 
@@ -114,45 +122,57 @@ const Sidebar = ({ forceCollapsed = false }) => {
           )}
           
           <div className="flex flex-col gap-7">
-            {/* Shopify */}
-            <div className="relative flex items-center h-8">
+            {/* Shopify — NavLink → /integrations */}
+            <NavLink
+              to="/integrations"
+              className={({ isActive }) =>
+                `relative flex items-center h-8 w-full rounded-lg transition-colors duration-150 outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)] ${isActive ? "bg-[var(--accent)]/15" : "hover:bg-[var(--surface2)]"}`
+              }
+            >
               <div className="flex items-center justify-center flex-shrink-0 w-[80px]">
                 <div className="relative">
-                  <img src={ShopifyImg} alt="Shopify" className="w-8 h-8 object-contain" />
+                  <img src={ShopifyImg} alt="Shopify" className="w-7 h-7 object-contain" />
                   {isCollapsed && (
-                    <div className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full border-2 border-[var(--surface)] ${shopifyConnected ? "bg-green-500" : "bg-gray-500"}`} />
+                    <div className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full border-2 border-[var(--surface)] ${shopifyConnected ? "bg-green-500" : "bg-gray-400"}`} />
                   )}
                 </div>
               </div>
               {!isCollapsed && (
-                <div className="absolute left-[80px] flex items-center justify-between w-[145px]">
-                  <span className="text-xs font-medium text-[var(--muted)]">{t.settings.integrations.shopify}</span>
-                  <Badge variant={shopifyConnected ? "success" : "muted"} className="min-w-[90px] text-center justify-center py-1">
-                    {shopifyConnected ? t.settings.integrations.connected : t.settings.integrations.disconnected}
-                  </Badge>
+                <div className="flex items-center">
+                  <span className="inline-block w-20 text-xs font-medium text-[var(--muted)]">{t.settings.integrations.shopify}</span>
+                  <span
+                    className={`w-2 h-2 rounded-full flex-shrink-0 ${shopifyConnected ? "bg-green-500" : "bg-gray-400"}`}
+                    title={shopifyConnected ? t.settings.integrations.connected : t.settings.integrations.disconnected}
+                  />
                 </div>
               )}
-            </div>
+            </NavLink>
 
-            {/* Meta Ads */}
-            <div className="relative flex items-center h-8">
+            {/* Meta Ads — NavLink → /integrations */}
+            <NavLink
+              to="/integrations"
+              className={({ isActive }) =>
+                `relative flex items-center h-8 w-full rounded-lg transition-colors duration-150 outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)] ${isActive ? "bg-[var(--accent)]/15" : "hover:bg-[var(--surface2)]"}`
+              }
+            >
               <div className="flex items-center justify-center flex-shrink-0 w-[80px]">
                 <div className="relative">
                   <img src={MetaImg} alt="Meta" className="w-7 h-7 object-contain" />
                   {isCollapsed && (
-                    <div className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full border-2 border-[var(--surface)] ${metaConnected ? "bg-green-500" : "bg-gray-500"}`} />
+                    <div className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full border-2 border-[var(--surface)] ${metaConnected ? "bg-green-500" : "bg-gray-400"}`} />
                   )}
                 </div>
               </div>
               {!isCollapsed && (
-                <div className="absolute left-[80px] flex items-center justify-between w-[145px]">
-                  <span className="text-xs font-medium text-[var(--muted)]">{t.settings.integrations.meta}</span>
-                  <Badge variant={metaConnected ? "success" : "muted"} className="min-w-[90px] text-center justify-center py-1">
-                    {metaConnected ? t.settings.integrations.connected : t.settings.integrations.disconnected}
-                  </Badge>
+                <div className="flex items-center">
+                  <span className="inline-block w-20 text-xs font-medium text-[var(--muted)]">{t.settings.integrations.meta}</span>
+                  <span
+                    className={`w-2 h-2 rounded-full flex-shrink-0 ${metaConnected ? "bg-green-500" : "bg-gray-400"}`}
+                    title={metaConnected ? t.settings.integrations.connected : t.settings.integrations.disconnected}
+                  />
                 </div>
               )}
-            </div>
+            </NavLink>
           </div>
         </div>
 
