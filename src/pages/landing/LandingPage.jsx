@@ -9,6 +9,7 @@ import { useT } from "../../hooks/useT.js";
 import { landingLanguageStore } from "../../i18n/landingLanguageStore.js";
 
 import Logo from "../../components/ui/logo.jsx";
+import Button from "../../components/ui/Button.jsx";
 import {
   TrendingDown,
   TableProperties,
@@ -774,7 +775,7 @@ export function Hero() {
           {/* CTA: siempre visible — tamaño reducido en mobile para que el logo quede centrado */}
           <Link
             to="/register"
-            className="nav-btn-primary-animated flex-shrink-0 inline-flex items-center justify-center text-white font-medium whitespace-nowrap text-center px-[14px] py-2 sm:px-4 text-[13px] sm:text-sm min-w-[100px] max-w-[100px] sm:min-w-[152px] sm:max-w-[152px]"
+            className="nav-btn-primary-animated flex-shrink-0 inline-flex items-center justify-center text-white font-medium whitespace-nowrap text-center px-2 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm min-w-[80px] max-w-[80px] sm:min-w-[152px] sm:max-w-[152px]"
             style={{
               background: "rgb(108, 99, 255)",
               fontFamily: "DM Sans, sans-serif",
@@ -1016,17 +1017,18 @@ function HowItWorksSection() {
   ];
 
   return (
-    <section 
-      className="relative py-32 px-6 overflow-hidden" 
+    <section
+      className="relative py-32 px-6 overflow-hidden"
       style={{ background: "#1a1a2e" }}
     >
       <div className="absolute top-0 left-0 w-full h-px" style={{ background: "linear-gradient(to right, transparent, rgba(108, 99, 255, 0.3), transparent)" }} />
 
       <div className="max-w-5xl mx-auto relative z-10">
         <Reveal>
-          <div className="text-center mb-14"> 
+          <div className="text-center mb-14">
             <h2
-              className="text-center mb-4"
+              id="integrations"
+              className="text-center mb-4 scroll-mt-14 sm:scroll-mt-16"
               style={{
                 fontFamily: "Syne, sans-serif",
                 fontWeight: 700,
@@ -1169,7 +1171,8 @@ function FeaturesSection() {
       <div className="max-w-5xl mx-auto">
         <Reveal>
           <h2
-            className="text-center mb-4"
+            id="features"
+            className="text-center mb-4 scroll-mt-14 sm:scroll-mt-16"
             style={{
               fontFamily: "Syne, sans-serif",
               fontWeight: 700,
@@ -1467,7 +1470,7 @@ function PricingSection() {
 
   return (
     <section className="relative py-24 px-6" style={{ background: "var(--surface)" }}>
-      
+
       {/* ── DIVISOR DE SECCIÓN (5 a 6) ── */}
       <div 
         className="absolute top-0 left-0 w-full h-px"
@@ -1481,7 +1484,8 @@ function PricingSection() {
           {/* ── ENCABEZADO SINCRONIZADO CON PROBLEM SECTION ── */}
           <div className="text-center mb-14">
             <h2
-              className="mb-4"
+              id="pricing"
+              className="mb-4 scroll-mt-14 sm:scroll-mt-16"
               style={{
                 fontFamily: "Syne, sans-serif",
                 fontWeight: 700,
@@ -1784,105 +1788,136 @@ function FinalCTASection() {
 // ─── Section 8 — Footer ───────────────────────────────────────────────────────
 function Footer() {
   const t = useT();
-  const dispatch = useDispatch();
-  const langs = ["es", "en", "ca"];
 
-  // Leemos el idioma directamente del store global (SSOT) — no estado local aislado
-  const activeLang = useSyncExternalStore(
-    landingLanguageStore.subscribe,
-    landingLanguageStore.getLanguage
-  );
+  // Hover usando inline styles — las Tailwind hover classes no pueden sobreescribir inline styles
+  const hoverOn  = (e) => { e.currentTarget.style.color = "rgba(167,139,250,1)"; };
+  const hoverOff = (e) => { e.currentTarget.style.color = "var(--muted)"; };
 
   return (
-    <footer
-      /* Eliminamos border-t para usar nuestro divisor de luz */
-      className="relative px-6 py-10"
-      style={{ background: "var(--surface)" }}
-    >
+    <footer className="relative">
       {/* ── DIVISOR DE SECCIÓN (7 a Footer) ── */}
-      <div 
+      <div
         className="absolute top-0 left-0 w-full h-px"
-        style={{ 
-          background: "linear-gradient(to right, transparent, rgba(108, 99, 255, 0.3), transparent)" 
+        style={{
+          background: "linear-gradient(to right, transparent, rgba(108, 99, 255, 0.3), transparent)",
         }}
       />
 
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:grid md:grid-cols-3 items-center gap-8 md:gap-4">
-          <div className="w-full flex justify-center md:justify-start">
-            <Link to="/">
-              <Logo />
-            </Link>
+      {/* ── Main Footer — 3 columnas ── */}
+      <div className="px-6 py-16" style={{ background: "var(--surface)" }}>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-10">
+
+          {/* Columna 1 — Brand: centrado en todos los breakpoints */}
+          <div className="flex flex-col items-center gap-4">
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              aria-label={t.landing.footer.scrollToTop}
+              className="focus:outline-none"
+            >
+              <Logo scale={1.3} />
+            </button>
+            <p
+              className="text-sm leading-relaxed max-w-[220px] text-center"
+              style={{ fontFamily: "DM Sans, sans-serif", color: "var(--muted)" }}
+            >
+              {t.landing.footer.tagline}
+            </p>
           </div>
 
-          <div className="w-full flex items-center gap-6 sm:gap-8 justify-center order-3 md:order-2">
-            {[
-              { to: "/privacy", label: t.landing.footer.privacy },
-              { to: "/terms", label: t.landing.footer.terms },
-              { to: "/contact", label: t.landing.footer.contact },
-            ].map(({ to, label }) => (
-              <Link
-                key={to}
-                to={to}
-                className="footer-nav-link text-sm transition-colors duration-150 whitespace-nowrap"
-                style={{
-                  color: "var(--muted)",
-                  fontFamily: "DM Sans, sans-serif",
-                }}
-              >
-                {label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="w-full flex justify-center md:justify-end order-2 md:order-3">
-            <div className="flex items-center gap-1 rounded-lg border border-[var(--border)] p-1">
-              {langs.map((lang) => (
-                <button
-                  key={lang}
-                  onClick={() => { landingLanguageStore.setLanguage(lang); dispatch(setLanguage(lang)); }}
-                  aria-label={lang === "es" ? "Cambiar a Español" : lang === "en" ? "Switch to English" : "Canviar a Català"}
-                  className={`lang-btn px-3 py-1 rounded-md text-xs font-semibold transition-colors duration-150 ${
-                    activeLang === lang ? "active" : ""
-                  }`}
-                  style={{ fontFamily: "DM Sans, sans-serif" }}
+          {/* Columna 2 — Producto: siempre centrada */}
+          <div className="flex flex-col items-center gap-4">
+            <h3
+              className="text-sm font-semibold uppercase tracking-widest"
+              style={{ fontFamily: "Syne, sans-serif", color: "var(--text)" }}
+            >
+              {t.landing.footer.productCol}
+            </h3>
+            {/* Smooth scroll via scrollIntoView — CSS scroll-mt-14 en cada section target */}
+            <nav className="flex flex-col items-center gap-3">
+              {[
+                { id: "features",     label: t.landing.footer.features     },
+                { id: "pricing",      label: t.landing.footer.pricing       },
+                { id: "integrations", label: t.landing.footer.integrations  },
+              ].map(({ id, label }) => (
+                <a
+                  key={id}
+                  href={`#${id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    // Lee la altura real del navbar desde el DOM — elimina hardcoding y subpixel issues
+                    const navbar = document.querySelector('nav');
+                    const navH   = navbar ? navbar.getBoundingClientRect().height : 64;
+                    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - navH, behavior: "smooth" });
+                  }}
+                  onMouseEnter={hoverOn}
+                  onMouseLeave={hoverOff}
+                  className="text-sm transition-colors duration-150"
+                  style={{ fontFamily: "DM Sans, sans-serif", color: "var(--muted)" }}
                 >
-                  {lang.toUpperCase()}
-                </button>
+                  {label}
+                </a>
               ))}
-            </div>
+            </nav>
           </div>
-        </div>
 
-        <div
-          className="mt-12 pt-6 text-center text-xs border-t"
-          style={{
-            borderColor: "var(--border)",
-            color: "var(--muted)",
-            fontFamily: "DM Sans, sans-serif",
-          }}
-        >
-          {t.landing.footer.copyright}
+          {/* Columna 3 — Legal & Contacto: centrado en todos los breakpoints */}
+          <div className="flex flex-col items-center gap-4">
+            <h3
+              className="text-sm font-semibold uppercase tracking-widest"
+              style={{ fontFamily: "Syne, sans-serif", color: "var(--text)" }}
+            >
+              {t.landing.footer.legalCol}
+            </h3>
+            <nav className="flex flex-col items-center gap-3">
+              {/* Rutas internas — React Router Link */}
+              <Link
+                to="/privacy"
+                onMouseEnter={hoverOn}
+                onMouseLeave={hoverOff}
+                className="text-sm transition-colors duration-150"
+                style={{ fontFamily: "DM Sans, sans-serif", color: "var(--muted)" }}
+              >
+                {t.landing.footer.privacy}
+              </Link>
+              <Link
+                to="/terms"
+                onMouseEnter={hoverOn}
+                onMouseLeave={hoverOff}
+                className="text-sm transition-colors duration-150"
+                style={{ fontFamily: "DM Sans, sans-serif", color: "var(--muted)" }}
+              >
+                {t.landing.footer.terms}
+              </Link>
+              {/* Contacto via mailto — usa <a> nativo */}
+              <a
+                href="mailto:hola@revixy.com"
+                onMouseEnter={hoverOn}
+                onMouseLeave={hoverOff}
+                className="text-sm transition-colors duration-150"
+                style={{ fontFamily: "DM Sans, sans-serif", color: "var(--muted)" }}
+              >
+                {t.landing.footer.contact}
+              </a>
+            </nav>
+          </div>
+
         </div>
       </div>
 
-      <style>{`
-        .footer-nav-link:hover {
-          color: var(--text) !important;
-        }
-        .lang-btn {
-          background: transparent;
-          color: var(--muted);
-        }
-        .lang-btn.active {
-          background: var(--accent) !important;
-          color: white !important;
-        }
-        .lang-btn:not(.active):hover {
-          color: var(--text) !important;
-          background: rgba(255, 255, 255, 0.05) !important;
-        }
-      `}</style>
+      {/* ── Bottom bar: copyright centrado ── */}
+      <div
+        className="px-6 py-5 text-center text-xs border-t"
+        style={{
+          background: "var(--surface)",
+          borderColor: "var(--border)",
+          fontFamily: "DM Sans, sans-serif",
+          color: "var(--muted)",
+        }}
+      >
+        © {new Date().getFullYear()} {t.common.appName}. {t.landing.footer.rightsReserved}
+      </div>
     </footer>
   );
 }

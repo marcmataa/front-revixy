@@ -6,6 +6,7 @@
 
 html {
   background-color: #1a1a2e;
+  scroll-behavior: smooth;
 }
 
 :root {
