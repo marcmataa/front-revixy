@@ -12,6 +12,7 @@ import Layout from "./components/layout/Layout.jsx";
 import Login from "./pages/auth/Login.jsx";
 import Register from "./pages/auth/Register.jsx";
 import AuthCallback from "./pages/auth/AuthCallback.jsx";
+import ShopifyCallback from "./pages/auth/ShopifyCallback.jsx";
 import ConnectShopify from "./pages/onboarding/ConnectShopify.jsx";
 import ConnectMeta from "./pages/onboarding/ConnectMeta.jsx";
 import StoreSettings from "./pages/onboarding/StoreSettings.jsx";
@@ -20,6 +21,7 @@ import AlertsPage from "./pages/alerts/AlertsPage.jsx";
 import ChatPage from "./pages/ai/ChatPage.jsx";
 import Settings from "./pages/settings/Settings.jsx";
 import ProfilePage from "./pages/profile/ProfilePage.jsx";
+import IntegrationsPage from "./pages/integrations/IntegrationsPage.jsx";
 import LandingPage from "./pages/landing/LandingPage.jsx";
 import PrivacyPage from "./pages/landing/PrivacyPage.jsx";
 import TermsPage from "./pages/landing/TermsPage.jsx";
@@ -81,6 +83,18 @@ export default function App() {
           />
 
           <Route path="/auth/callback" element={<AuthCallback />} />
+
+          {/* Callback de Shopify OAuth — requiere auth (JWT activo), sin OnboardingGuard ni Layout */}
+          <Route
+            path="/auth/shopify/callback"
+            element={
+              <AuthGuard>
+                <ErrorBoundary>
+                  <ShopifyCallback />
+                </ErrorBoundary>
+              </AuthGuard>
+            }
+          />
 
           <Route
             path="/onboarding/shopify"
@@ -177,6 +191,20 @@ export default function App() {
                   <Layout>
                     <ErrorBoundary>
                       <ProfilePage />
+                    </ErrorBoundary>
+                  </Layout>
+                </OnboardingGuard>
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/integrations"
+            element={
+              <AuthGuard>
+                <OnboardingGuard>
+                  <Layout>
+                    <ErrorBoundary>
+                      <IntegrationsPage />
                     </ErrorBoundary>
                   </Layout>
                 </OnboardingGuard>

@@ -20,6 +20,23 @@ export const fetchCurrentStore = createAsyncThunk(
   }
 );
 
+// Inicia el flujo OAuth con Shopify — devuelve { oauthUrl } para redirigir al usuario
+export const connectShopify = createAsyncThunk(
+  "store/connectShopify",
+  async (domain, { rejectWithValue }) => {
+    try {
+      const { data } = await storeApi.connectShopify(domain);
+      return data.data; // { oauthUrl: string }
+    } catch (error) {
+      const message =
+        error.response?.status < 500
+          ? error.response?.data?.error
+          : "Error al conectar con Shopify. Inténtalo de nuevo.";
+      return rejectWithValue(message);
+    }
+  }
+);
+
 // Actualiza la configuración de la tienda
 // Tras el éxito, invalida el cache de RTK Query para refrescar stats
 export const updateStoreSettings = createAsyncThunk(
@@ -33,6 +50,61 @@ export const updateStoreSettings = createAsyncThunk(
         error.response?.status < 500
           ? error.response?.data?.error
           : "Error al actualizar la configuración. Inténtalo de nuevo.";
+      return rejectWithValue(message);
+    }
+  }
+);
+
+// Refresca el estado de integración tras el callback OAuth de Shopify o tras una desconexión.
+// Usa solo getMyStore() — getIntegrationStatus() requiere storeId como query param
+// que el frontend no envía, causando 400 en storeOwnership middleware.
+// shopifyDomain y metaAdAccountId en la tienda son suficientes para derivar el estado.
+// connected requiere shopifyDomain Y status === "ACTIVE" — status REAUTH_REQUIRED = desconectado.
+export const refreshIntegrationStatus = createAsyncThunk(
+  "store/refreshIntegrationStatus",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await storeApi.getMyStore();
+      const store = data.data.store;
+      // Derivamos integrations del store object — shopifyDomain intacto tras disconnect,
+      // por eso chequeamos status === "ACTIVE" además de Boolean(shopifyDomain)
+      return {
+        ...store,
+        integrations: {
+          shopify: {
+            connected: Boolean(store.shopifyDomain) && store.status === "ACTIVE",
+            status: store.status,
+          },
+          meta: {
+            connected: Boolean(store.metaAdAccountId),
+            status: store.status,
+            adAccountId: store.metaAdAccountId || null,
+          },
+        },
+      };
+    } catch (error) {
+      const message =
+        error.response?.status < 500
+          ? error.response?.data?.error
+          : "Error al verificar el estado de integración. Inténtalo de nuevo.";
+      return rejectWithValue(message);
+    }
+  }
+);
+
+// Desconecta Shopify — limpia el token en backend y marca el store como REAUTH_REQUIRED.
+// Tras el éxito, el componente debe llamar refreshIntegrationStatus() para sincronizar el estado.
+export const disconnectShopify = createAsyncThunk(
+  "store/disconnectShopify",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await storeApi.disconnectShopify();
+      return data.data; // { storeId, shopifyConnected: false }
+    } catch (error) {
+      const message =
+        error.response?.status < 500
+          ? error.response?.data?.error
+          : "Error al desconectar Shopify. Inténtalo de nuevo.";
       return rejectWithValue(message);
     }
   }
@@ -60,6 +132,7 @@ const storeSlice = createSlice({
   initialState: {
     current: null, // null = sin tienda → OnboardingGuard redirige a /onboarding/shopify
     loading: false,
+    integrationLoading: false, // separado de loading — OnboardingGuard no lo lee, evita desmonte/remonte
     error: null,
     // hydrated: false hasta que fetchCurrentStore complete (éxito o fallo).
     // OnboardingGuard lo usa para saber si debe redirigir o esperar.
@@ -111,6 +184,46 @@ const storeSlice = createSlice({
       .addCase(updateMonthlyGoals.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(connectShopify.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(connectShopify.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(connectShopify.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(refreshIntegrationStatus.pending, (state) => {
+        // integrationLoading en lugar de loading — OnboardingGuard no reacciona,
+        // evitando el desmonte de IntegrationsPage y el loop infinito
+        state.integrationLoading = true;
+        state.error = null;
+      })
+      .addCase(refreshIntegrationStatus.fulfilled, (state, action) => {
+        state.current = action.payload;
+        state.integrationLoading = false;
+        state.hydrated = true;
+      })
+      .addCase(refreshIntegrationStatus.rejected, (state, action) => {
+        state.integrationLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(disconnectShopify.pending, (state) => {
+        // integrationLoading — mismo motivo que refreshIntegrationStatus: no afecta OnboardingGuard
+        state.integrationLoading = true;
+        state.error = null;
+      })
+      .addCase(disconnectShopify.fulfilled, (state) => {
+        state.integrationLoading = false;
+        // El componente llama refreshIntegrationStatus() tras este fulfilled para sincronizar
+        // integrations.shopify.connected con el nuevo status del backend
+      })
+      .addCase(disconnectShopify.rejected, (state, action) => {
+        state.integrationLoading = false;
+        state.error = action.payload;
       });
   },
 });
@@ -124,6 +237,7 @@ export const selectCurrentStore = createSelector(
   (current) => current
 );
 export const selectStoreLoading = (state) => state.store.loading;
+export const selectIntegrationLoading = (state) => state.store.integrationLoading;
 export const selectStoreError = (state) => state.store.error;
 export const selectStoreHydrated = (state) => state.store.hydrated;
 
@@ -147,6 +261,10 @@ export const selectStoreSettings = createSelector(
 export const selectMonthlyGoals = createSelector(
   (state) => state.store.current,
   (current) => current?.monthlyGoals ?? null
+);
+export const selectShopifyConnected = createSelector(
+  (state) => state.store.current,
+  (current) => current?.integrations?.shopify?.connected ?? false
 );
 
 // Thunk de invalidación cruzada — fuerza refetch inmediato de stats y alertas
